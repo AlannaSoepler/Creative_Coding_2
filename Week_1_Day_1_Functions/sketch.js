@@ -23,6 +23,8 @@ function drawBoxes(xBoxes,yBoxes){
     noStroke();
     for(let i = 0; i <= xBoxes; i++){
         for(let y = 0; y <= yBoxes; y++){
+            //First round x pos = 0, for the first box, and the y pos for box 1 is 10,35... 
+            //After that i increases by 1.
             rect(i*totalSpace+xOffset,y*totalSpace+yOffset,boxWidth,boxHeight);
         }
     }
