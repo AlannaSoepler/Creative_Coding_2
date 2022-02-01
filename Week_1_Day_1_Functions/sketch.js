@@ -4,7 +4,10 @@ let boxHeight = 20;
 let spacing = 5;
 let xOffset = 10;
 let yOffset = 10;
-let numBoxes = 10;
+let totalSpace = boxWidth + spacing;
+let xb = 10;
+let yb = 10;
+//let numBoxes = 10;
 
 function setup(){
     createCanvas(500, 500);
@@ -12,18 +15,18 @@ function setup(){
 }
 
 function draw(){
-    drawBoxes();
+    drawBoxes(xb,yb);
 }
 
-function drawBoxes(){
+function drawBoxes(xBoxes,yBoxes){
     fill(50);
     noStroke();
-    for(let i = 0; i < numBoxes; i++){
-        let totalSpace = boxWidth + spacing;
-        rect(i*totalSpace+xOffset,yOffset,boxWidth,boxHeight);
+    for(let i = 0; i <= xBoxes; i++){
+        for(let y = 0; y <= yBoxes; y++){
+            rect(i*totalSpace+xOffset,y*totalSpace+yOffset,boxWidth,boxHeight);
+        }
     }
 }
-
 
 function clap(startNum,endNum){
     let loopCount = endNum-startNum;
