@@ -30,10 +30,36 @@ rect()
 //a function with a paramater
 clap(3,8)
 function clap(startNum,endNum){
-    let loopCount = endNumb-startNum;
-    for(let i = startNum; i <= loopCount; i++){
+    let loopCount = endNum-startNum;
+    for(let i = 0; i <= loopCount; i++){
         console.log("Hi"+(startNum+i));
     }    
 }
 
-//for 
+//working function
+clap(3,8);
+
+function clap(startNum,endNum){
+    //code after this is called a statment
+    let loopCount = endNum-startNum;
+    for(let i = 0; i <= loopCount; i++){
+        console.log("Hi"+(startNum+i));
+    }    
+    return "Done";
+}
+
+function addMeUp(num01,num02){
+    //A line of code is called an statement
+    //the code after the assignment operator is called an expression
+    let sum = num01 + num02;
+    return sum;
+}
+
+//if statemnet = conditional statement
+// == comparision oporeator
+if(clap == 34){
+    console.log("hi");
+}
+
+
+//function must have a name, declared, code and return
