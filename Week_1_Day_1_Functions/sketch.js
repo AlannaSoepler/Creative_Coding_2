@@ -42,3 +42,4 @@ function addMeUp(num01,num02){
     let sum = num01 + num02;
     return sum;
 }
+//End of class
