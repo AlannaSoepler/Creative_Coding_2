@@ -6,14 +6,15 @@ let spacing = 10;
 let margin = 20;
 let avalableWidth = chartWidth-(2*margin)-((data.length-1)*spacing);
 let barWidth = avalableWidth / data.length;
+let completeBarWidth = barWidth+spacing;
+let halfBar = barWidth - (barWidth/2);
+let barValuePos = 1;
 let numTick = 10;
 let tickSize = -10;
 let textPlace = -15;
 let drawTick = chartHeight / numTick;
 let drawText = chartHeight / numTick;
-
-console.log(barWidth);
-console.log(drawTick);
+let barValueSpacing = 20;
 
 function setup(){
     createCanvas(500,500);
@@ -30,28 +31,42 @@ function draw(){
     line(0,0,400,0);
     
     for(let i = 0; i <= numTick; i++){
+
         //Draw the tick value
-        fill(255,0,0);
+        fill(255);
         noStroke();
         textSize(12);
         textAlign(RIGHT,CENTER);
         text(i*40,textPlace,-drawText*i);
+
         //Drawing the ticks
         stroke(255,200);
         strokeWeight(2);
         line(0,-drawTick*i,tickSize,-drawTick*i);
     }
 
-    translate(margin,0);
+    
 
+    translate(margin,0);
     
 
     for(let i = 0; i <= data.length; i++){
         noStroke();
+        
+        //Bar value
+        push();
+        translate(halfBar,0);
+        fill(255);
+        textSize(23);
+        textAlign(CENTER);
+        text(data[i],completeBarWidth*i,-data[i]-barValueSpacing);
+        pop();
+
+        //Draw the bar
         fill(0,150,0);
-        barWidthAll = barWidth+spacing;
-        rect(barWidthAll*i, 0, barWidth, -data[i]);
-    }
+        rect(completeBarWidth*i, 0, barWidth, -data[i]);
+        
+    }   
 }
 
 

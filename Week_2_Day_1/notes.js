@@ -1,3 +1,0 @@
-// Object.property 
-// Array[index]
-//
