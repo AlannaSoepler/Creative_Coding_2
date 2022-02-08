@@ -1,25 +1,31 @@
-//Test
+//Variables
 let chartWidth = 400;
 let chartHeight = 400;
-let data = [250,100,50];
 let spacing = 10;
 let margin = 20;
+let numTick = 10;
+let sizeTick = -10;
+let textPlace = -15;
+let barValueSpacing = 20;
+
+//Array
+let data = [250,100,50];
+
+//Expretions
 let avalableWidth = chartWidth-(2*margin)-((data.length-1)*spacing);
 let barWidth = avalableWidth / data.length;
 let completeBarWidth = barWidth+spacing;
-let halfBar = barWidth - (barWidth/2);
-let barValuePos = 1;
-let numTick = 10;
-let tickSize = -10;
-let textPlace = -15;
 let drawTick = chartHeight / numTick;
 let drawText = chartHeight / numTick;
-let barValueSpacing = 20;
+let halfBar = barWidth/2;
+
+
 
 function setup(){
     createCanvas(500,500);
     background(0);
 }
+
 
 function draw(){
     background(0);
@@ -29,7 +35,7 @@ function draw(){
     strokeWeight(2);
     line(0,0,0,-400);
     line(0,0,400,0);
-    
+
     for(let i = 0; i <= numTick; i++){
 
         //Draw the tick value
@@ -42,13 +48,10 @@ function draw(){
         //Drawing the ticks
         stroke(255,200);
         strokeWeight(2);
-        line(0,-drawTick*i,tickSize,-drawTick*i);
+        line(0,-drawTick*i,sizeTick,-drawTick*i);
     }
 
-    
-
     translate(margin,0);
-    
 
     for(let i = 0; i <= data.length; i++){
         noStroke();
