@@ -41,7 +41,7 @@ class BarChart02 {
       return x.total;
     });
     this.maxVal = max(listValues);
-    this.incrementTick = Math.round(this.maxVal / this.numTicks);
+    this.incrementTick = this.maxVal / this.numTicks;
   }
   render() {
     push();
@@ -62,25 +62,29 @@ class BarChart02 {
     line(0, 0, this.chartWidth, 0);
   }
   drawTicks() {
-    for (let i = 0; i < this.numTicks; i++) {
+    for (let i = 0; i <= this.numTicks; i++) {
       let drawTick = this.chartWidth / this.numTicks;
       //Draw the tick value
       fill(255);
       noStroke();
       textSize(12);
       textAlign(CENTER);
-      text(this.incrementTick * i, drawTick * i, this.textPlace);
+      text(
+        (this.incrementTick * i).toFixed(this.numPlaces),
+        drawTick * i,
+        this.textPlace
+      );
 
       stroke(255, 200);
       line(this.tickSpacing * i, 0, this.tickSpacing * i, this.sizeTicks);
 
-      stroke(255, 50);
-      line(
-        this.tickSpacing * i,
-        -this.chartHeight,
-        this.tickSpacing * i,
-        this.sizeTicks
-      );
+      //   stroke(255, 50);
+      //   line(
+      //     this.tickSpacing * i,
+      //     -this.chartHeight,
+      //     this.tickSpacing * i,
+      //     this.sizeTicks
+      //   );
     }
   }
   drawRects() {
