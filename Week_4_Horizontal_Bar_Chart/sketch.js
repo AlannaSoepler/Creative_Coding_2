@@ -1,6 +1,6 @@
 //Array of objects
 let data = [
-  { name: 'Oranges', total: 63 },
+  { name: 'Oranges', total: 100 },
   { name: 'Bananas', total: 33 },
   { name: 'Pears', total: 7 },
   { name: 'Apples', total: 43 },
@@ -29,6 +29,8 @@ function setup() {
 
 function draw() {
   background(50);
+  chart01.updateValues();
   chart01.render();
+  chart02.updateValues();
   chart02.render();
 }

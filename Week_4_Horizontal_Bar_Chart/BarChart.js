@@ -69,10 +69,6 @@ class BarChart {
       stroke(255, 100);
       line(0, this.tickSpacing * -i, -10, this.tickSpacing * -i);
 
-      //ticks
-      stroke(255, 100);
-      line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
-
       //numbers (text)
       fill(255, 200);
       noStroke();
