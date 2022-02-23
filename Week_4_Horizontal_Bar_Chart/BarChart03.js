@@ -94,23 +94,22 @@ class BarChart03 {
     push();
     translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
-      let colorNumb = i % 4;
-
-      fill(this.colors[colorNumb]);
       noStroke();
+      push();
+      for (let j = 0; j < this.data[i].values.length; j++) {
+        let colorNumb = j % 4;
 
-      for (let j = 0; j <= this.data[i].values[i].value.length; j++) {
+        fill(this.colors[colorNumb]);
+        //pop();
         rect(
           (this.barWidth + this.spacing) * i,
           0,
           this.barWidth,
-          this.scaleData(-this.data[j].values[j].value)
+          this.scaleData(-this.data[i].values[j].value)
         );
-        translate(
-          (this.barWidth + this.spacing) * i,
-          -this.data[j].values[j].value
-        );
+        translate(0, this.scaleData(-this.data[i].values[j].value));
       }
+      pop();
 
       //Bar Value
       if (this.showValues) {
