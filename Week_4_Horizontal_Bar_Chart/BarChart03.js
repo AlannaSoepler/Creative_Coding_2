@@ -1,4 +1,4 @@
-class BarChart {
+class BarChart03 {
   constructor(_data) {
     this.data = _data;
     this.chartWidth = 400;
@@ -12,9 +12,6 @@ class BarChart {
     this.tickIncrements;
     this.maxValue;
     this.numPlaces = 0;
-    this.bodyTextSize = 12;
-    this.titleSize = 12;
-    this.valueSize = 10;
 
     this.showValues = true;
     this.showLabels = true;
@@ -97,25 +94,29 @@ class BarChart {
     push();
     translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
-      //Modules is the remainder.
-      //It will iterate though the colors and start from the beginning
       let colorNumb = i % 4;
 
-      //bars
       fill(this.colors[colorNumb]);
       noStroke();
-      rect(
-        (this.barWidth + this.spacing) * i,
-        0,
-        this.barWidth,
-        this.scaleData(-this.data[i].total)
-      );
+
+      for (let j = 0; j <= this.data[i].values[i].value.length; j++) {
+        rect(
+          (this.barWidth + this.spacing) * i,
+          0,
+          this.barWidth,
+          this.scaleData(-this.data[j].values[j].value)
+        );
+        translate(
+          (this.barWidth + this.spacing) * i,
+          -this.data[j].values[j].value
+        );
+      }
 
       //Bar Value
       if (this.showValues) {
         noStroke();
         fill(255);
-        textSize(this.valueSize);
+        textSize(16);
         textAlign(CENTER, BOTTOM);
         text(
           this.data[i].total,
@@ -130,7 +131,7 @@ class BarChart {
           push();
           noStroke();
           fill(255);
-          textSize(this.bodyTextSize);
+          textSize(16);
           textAlign(LEFT, CENTER);
           translate((this.barWidth + this.spacing) * i + this.barWidth / 2, 10);
           rotate(PI / 2);
@@ -139,7 +140,7 @@ class BarChart {
         } else {
           noStroke();
           fill(255);
-          textSize(this.bodyTextSize);
+          textSize(14);
           textAlign(CENTER, BOTTOM);
           text(
             this.data[i].name,

@@ -13,6 +13,9 @@ class BarChart02 {
     this.marginTicks = 25;
     this.barLabelMargin = 10;
     this.barValueMargin = 10;
+    this.bodyTextSize = 12;
+    this.titleSize = 12;
+    this.valueSize = 10;
     this.colors;
 
     this.incrementTick;
@@ -82,7 +85,7 @@ class BarChart02 {
       //Draw the tick value
       fill(255);
       noStroke();
-      textSize(12);
+      textSize(this.valueSize);
       textAlign(CENTER);
       text(
         (this.incrementTick * i).toFixed(this.numDecimals),
@@ -111,7 +114,7 @@ class BarChart02 {
       if (this.showValues) {
         noStroke();
         fill(255);
-        textSize(16);
+        textSize(this.valueSize);
         textAlign(LEFT, CENTER);
         text(
           this.data[i].total,
@@ -125,7 +128,7 @@ class BarChart02 {
           push();
           noStroke();
           fill(255);
-          textSize(16);
+          textSize(this.bodyTextSize);
           textAlign(CENTER);
           translate(
             -this.barLabelMargin,
@@ -137,7 +140,7 @@ class BarChart02 {
         } else {
           noStroke();
           fill(255);
-          textSize(16);
+          textSize(this.bodyTextSize);
           textAlign(RIGHT, CENTER);
           text(
             this.data[i].name,
