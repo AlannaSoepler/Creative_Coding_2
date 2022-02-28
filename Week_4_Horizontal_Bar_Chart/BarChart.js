@@ -4,7 +4,7 @@ class BarChart {
     this.chartWidth = 400;
     this.chartHeight = 400;
     //this.listValues = data.map(function (x) {return x.total;});
-    this.spacing = 10;
+    this.spacing = 40;
     this.margin = 20;
     this.numTicks = 10;
     this.posX = 50;
@@ -12,19 +12,29 @@ class BarChart {
     this.tickIncrements;
     this.maxValue;
     this.numPlaces = 0;
-    this.bodyTextSize = 12;
-    this.titleSize = 12;
-    this.valueSize = 10;
+    this.bodyTextSize = 18;
+    this.titleSize = 24;
+    this.valueSize = 18;
+    this.tickSize = 18;
+    this.labelMargin = 30;
+    this.titleMargin = 30;
+    this.tickMargin = 15;
+    this.verticalAxisMargin = 50;
+    this.horizontalAxisMargin = 50;
 
     this.showValues = true;
     this.showLabels = true;
-    this.rotateLabels = true;
+    this.rotateLabels = false;
 
     this.colors = [
-      color('#ffe066'),
-      color('#fab666'),
-      color('#f68f6a'),
-      color('#f3646a'),
+      //color('#29066b'),
+      //color('#7d3ac1'),
+      //color('#af4bce'),
+      //color('#db4cb2'),
+      color('#eb548c'),
+      color('#ea7369'),
+      color('#f0a58f'),
+      color('#fceea6'),
     ];
     this.updateValues();
     this.calculateMaxValue();
@@ -39,10 +49,14 @@ class BarChart {
   render() {
     push();
     translate(this.posX, this.posY);
+    this.title();
+    this.horizontalAxisTitle();
+    this.verticalAxisTitle();
     this.drawAxis();
     this.drawTicks();
     this.drawHorizontalLine();
     this.drawRects();
+    this.textLabel();
     pop();
   }
 
@@ -61,25 +75,21 @@ class BarChart {
 
   drawAxis() {
     stroke(255, 180);
-    strokeWeight(1);
+    strokeWeight(2);
     line(0, 0, 0, -this.chartHeight); //y
     line(0, 0, this.chartWidth, 0); //x
   }
 
   drawTicks() {
     for (let i = 0; i <= this.numTicks; i++) {
-      //ticks
-      stroke(255, 100);
-      line(0, this.tickSpacing * -i, -10, this.tickSpacing * -i);
-
       //numbers (text)
       fill(255, 200);
       noStroke();
-      textSize(11);
+      textSize(this.tickSize);
       textAlign(RIGHT, CENTER);
       text(
         (i * this.tickIncrements).toFixed(this.numPlaces),
-        -15,
+        -this.tickMargin,
         this.tickSpacing * -i
       );
     }
@@ -89,19 +99,48 @@ class BarChart {
     for (let i = 0; i <= this.numTicks; i++) {
       //ticks
       stroke(255, 100);
+      strokeWeight(0.5);
       line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
     }
+  }
+
+  title() {
+    noStroke();
+    fill(255);
+    textSize(this.titleSize);
+    textAlign(CENTER);
+    text(
+      'Vertical Bar Chart',
+      this.chartWidth / 2,
+      -this.chartHeight - this.titleMargin
+    );
+  }
+
+  verticalAxisTitle() {
+    push();
+    noStroke();
+    fill(255);
+    textSize(this.titleSize);
+    textAlign(CENTER);
+    rotate((3 * PI) / 2);
+    text('Amount', this.chartHeight / 2, -this.verticalAxisMargin);
+    pop();
+  }
+
+  horizontalAxisTitle() {
+    noStroke();
+    fill(255);
+    textSize(this.titleSize);
+    textAlign(CENTER);
+    text('Frout', this.chartWidth / 2, this.horizontalAxisMargin);
   }
 
   drawRects() {
     push();
     translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
-      //Modules is the remainder.
-      //It will iterate though the colors and start from the beginning
       let colorNumb = i % 4;
 
-      //bars
       fill(this.colors[colorNumb]);
       noStroke();
       rect(
@@ -110,8 +149,12 @@ class BarChart {
         this.barWidth,
         this.scaleData(-this.data[i].total)
       );
+    }
+    pop();
+  }
 
-      //Bar Value
+  barValue() {
+    for (let i = 0; i < this.data.length; i++) {
       if (this.showValues) {
         noStroke();
         fill(255);
@@ -123,8 +166,11 @@ class BarChart {
           this.scaleData(-this.data[i].total)
         );
       }
+    }
+  }
 
-      //Bar Label
+  textLabel() {
+    for (let i = 0; i < this.data.length; i++) {
       if (this.showLabels) {
         if (this.rotateLabels) {
           push();
@@ -144,11 +190,10 @@ class BarChart {
           text(
             this.data[i].name,
             (this.barWidth + this.spacing) * i + this.barWidth / 2,
-            20
+            this.labelMargin
           );
         }
       }
     }
-    pop();
   }
 }

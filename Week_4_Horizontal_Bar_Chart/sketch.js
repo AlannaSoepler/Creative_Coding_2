@@ -45,28 +45,36 @@ let data = [
 let chart01;
 let chart02;
 let chart03;
+let titleFont;
+let bodyFont;
+
+function preload() {
+  titleFont = loadFont('assets/Merriweather-Regular.ttf');
+  bodyFont = loadFont('assets/Roboto-Regular.ttf');
+}
 
 function setup() {
   createCanvas(800, 800);
+  textFont(bodyFont);
 
   chart01 = new BarChart(data);
-  chart01.chartWidth = 200;
-  chart01.chartHeight = 200;
-  chart01.posX = 50;
+  chart01.chartWidth = 400;
+  chart01.chartHeight = 400;
+  chart01.posX = 100;
   chart01.posY = 500;
   chart01.updateValues();
 
   chart02 = new BarChart02(data);
   chart02.chartWidth = 200;
   chart02.chartHeight = 200;
-  chart02.posX = 400;
+  chart02.posX = 900;
   chart02.posY = 500;
   chart02.updateValues();
 
   chart03 = new BarChart03(data);
   chart03.chartWidth = 200;
   chart03.chartHeight = 200;
-  chart03.posX = 400;
+  chart03.posX = 900;
   chart03.posY = 800;
   chart03.updateValues();
 }
