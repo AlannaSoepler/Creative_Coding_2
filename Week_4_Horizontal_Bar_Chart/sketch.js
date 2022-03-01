@@ -51,6 +51,7 @@ let chart02;
 let chart03;
 let chart04;
 let chart05;
+let chart06;
 let titleFont;
 let bodyFont;
 
@@ -110,6 +111,13 @@ function setup() {
   chart05.posX = 450;
   chart05.posY = 900;
   chart05.updateValues();
+
+  chart06 = new BarChart06(data);
+  chart06.chartWidth = 200;
+  chart06.chartHeight = 200;
+  chart06.posX = 450;
+  chart06.posY = 900;
+  chart06.updateValues();
 }
 
 function draw() {
