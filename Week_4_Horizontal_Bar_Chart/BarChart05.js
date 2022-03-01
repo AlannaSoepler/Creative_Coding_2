@@ -156,8 +156,8 @@ class BarChart05 {
     push();
     translate(this.margin, 0);
     noFill();
-    strokeWeight(2);
-    stroke(255, 200);
+    strokeWeight(4);
+    stroke(255);
     beginShape();
     for (let i = 0; i < this.data.length; i++) {
       vertex(

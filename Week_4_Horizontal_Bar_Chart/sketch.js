@@ -69,7 +69,7 @@ function setup() {
   chart01.pos.posX = 150;
   chart01.pos.posY = 550;
   chart01.spacing = 30;
-  chart01.margin = 30;
+  chart01.margin = 20;
   chart01.labelMargin = 30;
   chart01.titleMargin = 30;
   chart01.numTicks = 10;
@@ -86,15 +86,15 @@ function setup() {
   chart02 = new BarChart02(data);
   chart02.chartWidth = 200;
   chart02.chartHeight = 200;
-  chart02.posX = 900;
-  chart02.posY = 500;
+  chart02.posX = 700;
+  chart02.posY = 350;
   chart02.updateValues();
 
   chart03 = new BarChart03(data);
   chart03.chartWidth = 200;
   chart03.chartHeight = 200;
-  chart03.posX = 900;
-  chart03.posY = 800;
+  chart03.posX = 700;
+  chart03.posY = 650;
   chart03.updateValues();
 
   chart04 = new BarChart04(data);
