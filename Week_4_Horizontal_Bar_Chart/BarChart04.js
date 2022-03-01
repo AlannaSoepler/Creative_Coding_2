@@ -1,8 +1,8 @@
-class BarChart03 {
-  constructor(_data) {
+class BarChart04 {
+  constructor(_data, _chartWidth, _chartHeight) {
     this.data = _data;
-    this.chartWidth = 400;
-    this.chartHeight = 400;
+    this.chartWidth = _chartWidth;
+    this.chartHeight = _chartHeight;
     //this.listValues = data.map(function (x) {return x.total;});
     this.spacing = 10;
     this.margin = 20;
@@ -31,6 +31,9 @@ class BarChart03 {
     this.availableWidth =
       this.chartWidth - this.margin * 2 - this.spacing * (this.data.length - 1); //available space for bars
     this.barWidth = this.availableWidth / this.data.length; //bar width
+  }
+  data() {
+    for (let i = 0; i <= this.data.length; i++) {}
   }
 
   render() {
@@ -105,24 +108,30 @@ class BarChart03 {
           (this.barWidth + this.spacing) * i,
           0,
           this.barWidth,
-          this.scaleData(-this.data[i].values[j].value)
+
+          (-this.data[i].values[j].value / this.data[i].total) *
+            this.chartHeight
         );
-        translate(0, this.scaleData(-this.data[i].values[j].value));
+        translate(
+          0,
+          (-this.data[i].values[j].value / this.data[i].total) *
+            this.chartHeight
+        );
       }
       pop();
 
       //Bar Value
-      if (this.showValues) {
-        noStroke();
-        fill(255);
-        textSize(16);
-        textAlign(CENTER, BOTTOM);
-        text(
-          this.data[i].total,
-          (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].total)
-        );
-      }
+      // if (this.showValues) {
+      //   noStroke();
+      //   fill(255);
+      //   textSize(16);
+      //   textAlign(CENTER, BOTTOM);
+      //   text(
+      //     this.data[i].total,
+      //     (this.barWidth + this.spacing) * i + this.barWidth / 2,
+      //     this.scaleData(-this.data[i].total)
+      //   );
+      // }
 
       //Bar Label
       if (this.showLabels) {

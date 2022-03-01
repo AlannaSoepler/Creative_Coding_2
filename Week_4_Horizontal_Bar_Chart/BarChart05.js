@@ -1,4 +1,4 @@
-class BarChart03 {
+class BarChart05 {
   constructor(_data) {
     this.data = _data;
     this.chartWidth = 400;

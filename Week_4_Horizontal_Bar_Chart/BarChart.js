@@ -1,26 +1,43 @@
 class BarChart {
-  constructor(_data) {
+  constructor(
+    _data,
+    _chartWidth,
+    _chartHeight,
+    _posX,
+    _posY,
+    _spacing,
+    _margin,
+    _labelMargin,
+    _titleMargin,
+    _tickMargin,
+    _numTicks,
+    _tickSize,
+    _numPlaces,
+    _bodyFontSize,
+    _titleFontSize,
+    _valueFontSize,
+    _verticalAxisMargin,
+    _horizontalAxisMargin
+  ) {
     this.data = _data;
-    this.chartWidth = 400;
-    this.chartHeight = 400;
-    //this.listValues = data.map(function (x) {return x.total;});
-    this.spacing = 40;
-    this.margin = 20;
-    this.numTicks = 10;
-    this.posX = 50;
-    this.posY = 450;
-    this.tickIncrements;
+    this.chartWidth = _chartWidth;
+    this.chartHeight = _chartHeight;
+    this.pos = createVector(_posX, _posY);
     this.maxValue;
-    this.numPlaces = 0;
-    this.bodyTextSize = 18;
-    this.titleSize = 24;
-    this.valueSize = 18;
-    this.tickSize = 18;
-    this.labelMargin = 30;
-    this.titleMargin = 30;
-    this.tickMargin = 15;
-    this.verticalAxisMargin = 50;
-    this.horizontalAxisMargin = 50;
+    this.spacing = _spacing;
+    this.margin = _margin;
+    this.labelMargin = _labelMargin;
+    this.titleMargin = _titleMargin;
+    this.tickMargin = _tickMargin;
+    this.numTicks = 10;
+    this.tickSize = _tickSize;
+    this.tickIncrements;
+    this.numPlaces = _numPlaces;
+    this.bodyFontSize = _bodyFontSize;
+    this.titleFontSize = _titleFontSize;
+    this.valueFontSize = _valueFontSize;
+    this.verticalAxisMargin = _verticalAxisMargin;
+    this.horizontalAxisMargin = _horizontalAxisMargin;
 
     this.showValues = true;
     this.showLabels = true;
@@ -48,7 +65,7 @@ class BarChart {
 
   render() {
     push();
-    translate(this.posX, this.posY);
+    translate(this.pos.posX, this.pos.posY);
     this.title();
     this.horizontalAxisTitle();
     this.verticalAxisTitle();
@@ -56,6 +73,7 @@ class BarChart {
     this.drawTicks();
     this.drawHorizontalLine();
     this.drawRects();
+    this.lines();
     this.textLabel();
     pop();
   }
@@ -107,7 +125,7 @@ class BarChart {
   title() {
     noStroke();
     fill(255);
-    textSize(this.titleSize);
+    textSize(this.titleFontSize);
     textAlign(CENTER);
     text(
       'Vertical Bar Chart',
@@ -120,7 +138,7 @@ class BarChart {
     push();
     noStroke();
     fill(255);
-    textSize(this.titleSize);
+    textSize(this.titleFontSize);
     textAlign(CENTER);
     rotate((3 * PI) / 2);
     text('Amount', this.chartHeight / 2, -this.verticalAxisMargin);
@@ -130,9 +148,25 @@ class BarChart {
   horizontalAxisTitle() {
     noStroke();
     fill(255);
-    textSize(this.titleSize);
+    textSize(this.titleFontSize);
     textAlign(CENTER);
     text('Frout', this.chartWidth / 2, this.horizontalAxisMargin);
+  }
+
+  lines() {
+    push();
+    translate(this.margin, 0);
+    this.barValue();
+    for (let i = 0; i < this.data.length; i++) {
+      for (let j = 0; j < this.data[i].total / 10; j++) {
+        fill(255, 200);
+        stroke(255, 200);
+        strokeWeight(2);
+        line(0, this.tickSpacing * -j, this.barWidth, this.tickSpacing * -j);
+      }
+      translate(this.barWidth + this.spacing, 0);
+    }
+    pop();
   }
 
   drawRects() {
@@ -140,7 +174,6 @@ class BarChart {
     translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
       let colorNumb = i % 4;
-
       fill(this.colors[colorNumb]);
       noStroke();
       rect(
@@ -150,6 +183,8 @@ class BarChart {
         this.scaleData(-this.data[i].total)
       );
     }
+    this.barValue();
+    //this.textLabel();
     pop();
   }
 
@@ -158,7 +193,7 @@ class BarChart {
       if (this.showValues) {
         noStroke();
         fill(255);
-        textSize(this.valueSize);
+        textSize(this.valueFontSize);
         textAlign(CENTER, BOTTOM);
         text(
           this.data[i].total,
@@ -170,13 +205,15 @@ class BarChart {
   }
 
   textLabel() {
+    push();
+    translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
       if (this.showLabels) {
         if (this.rotateLabels) {
           push();
           noStroke();
           fill(255);
-          textSize(this.bodyTextSize);
+          textSize(this.bodyFontSize);
           textAlign(LEFT, CENTER);
           translate((this.barWidth + this.spacing) * i + this.barWidth / 2, 10);
           rotate(PI / 2);
@@ -185,7 +222,7 @@ class BarChart {
         } else {
           noStroke();
           fill(255);
-          textSize(this.bodyTextSize);
+          textSize(this.bodyFontSize);
           textAlign(CENTER, BOTTOM);
           text(
             this.data[i].name,
@@ -195,5 +232,6 @@ class BarChart {
         }
       }
     }
+    pop();
   }
 }
