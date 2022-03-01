@@ -40,6 +40,7 @@ class BarChart05 {
     this.drawTicks();
     this.drawHorizontalLine();
     this.drawRects();
+    this.drawAvg();
     pop();
   }
 
@@ -110,7 +111,6 @@ class BarChart05 {
         translate(0, this.scaleData(-this.data[i].values[j].value));
       }
       pop();
-
       //Bar Value
       if (this.showValues) {
         noStroke();
@@ -150,5 +150,22 @@ class BarChart05 {
       }
     }
     pop();
+  }
+
+  drawAvg() {
+    push();
+    translate(this.margin, 0);
+    noFill();
+    strokeWeight(2);
+    stroke(255, 200);
+    beginShape();
+    for (let i = 0; i < this.data.length; i++) {
+      vertex(
+        (this.barWidth + this.spacing) * i + this.barWidth / 2,
+        -this.data[i].average
+      );
+    }
+    endShape();
+    push();
   }
 }

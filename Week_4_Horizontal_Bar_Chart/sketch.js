@@ -9,6 +9,7 @@ let data = [
       { category: 'Ireland', value: 20 },
       { category: 'Norway', value: 5 },
     ],
+    average: 95,
   },
   {
     name: 'Bananas',
@@ -19,6 +20,7 @@ let data = [
       { category: 'Ireland', value: 20 },
       { category: 'Norway', value: 20 },
     ],
+    average: 65,
   },
   {
     name: 'Pears',
@@ -29,6 +31,7 @@ let data = [
       { category: 'Ireland', value: 5 },
       { category: 'Norway', value: 4 },
     ],
+    average: 5,
   },
   {
     name: 'Apples',
@@ -39,6 +42,7 @@ let data = [
       { category: 'Ireland', value: 11 },
       { category: 'Norway', value: 9 },
     ],
+    average: 25,
   },
 ];
 
