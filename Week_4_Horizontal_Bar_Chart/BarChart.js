@@ -158,11 +158,16 @@ class BarChart {
     translate(this.margin, 0);
     this.barValue();
     for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < (this.data[i].total / 10) * 0.5; j++) {
+      for (let j = 0; j < this.data[i].total / 10; j++) {
         fill(255, 200);
         stroke(255, 200);
         strokeWeight(2);
-        line(0, this.tickSpacing * -j, this.barWidth, this.tickSpacing * -j);
+        line(
+          0,
+          this.tickSpacing * -j * 2,
+          this.barWidth,
+          this.tickSpacing * -j * 2
+        );
       }
       translate(this.barWidth + this.spacing, 0);
     }
