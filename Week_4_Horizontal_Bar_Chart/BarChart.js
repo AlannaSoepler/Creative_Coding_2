@@ -29,7 +29,7 @@ class BarChart {
     this.labelMargin = _labelMargin;
     this.titleMargin = _titleMargin;
     this.tickMargin = _tickMargin;
-    this.numTicks = 10;
+    this.numTicks = _numTicks;
     this.tickSize = _tickSize;
     this.tickIncrements;
     this.numPlaces = _numPlaces;
@@ -158,7 +158,7 @@ class BarChart {
     translate(this.margin, 0);
     this.barValue();
     for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < this.data[i].total / 10; j++) {
+      for (let j = 0; j < (this.data[i].total / 10) * 0.5; j++) {
         fill(255, 200);
         stroke(255, 200);
         strokeWeight(2);

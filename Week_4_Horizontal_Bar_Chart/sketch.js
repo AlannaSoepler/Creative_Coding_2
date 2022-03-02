@@ -73,7 +73,9 @@ function setup() {
   chart01.margin = 20;
   chart01.labelMargin = 30;
   chart01.titleMargin = 30;
-  chart01.numTicks = 10;
+  console.log(chart01.numTicks);
+  chart01.numTicks = 20;
+  console.log(chart01.numTicks);
   chart01.tickMargin = 30;
   chart01.tickSize = 15;
   chart01.numPlaces = 0;
@@ -82,7 +84,7 @@ function setup() {
   chart01.valueFontSize = 18;
   chart01.verticalAxisMargin = 80;
   chart01.horizontalAxisMargin = 80;
-  chart01.updateValues();
+  //chart01.updateValues();
 
   chart02 = new BarChart02(data);
   chart02.chartWidth = 200;
@@ -124,6 +126,7 @@ function draw() {
   background(50);
   scale(0.6);
   chart01.updateValues();
+  chart01.calculateMaxValue();
   chart01.render();
   chart02.updateValues();
   chart02.render();
