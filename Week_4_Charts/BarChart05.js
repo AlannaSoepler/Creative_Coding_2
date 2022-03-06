@@ -152,6 +152,7 @@ class BarChart05 {
     pop();
   }
 
+  //Need to add it to scale
   drawAvg() {
     push();
     translate(this.margin, 0);
@@ -162,7 +163,7 @@ class BarChart05 {
     for (let i = 0; i < this.data.length; i++) {
       vertex(
         (this.barWidth + this.spacing) * i + this.barWidth / 2,
-        -this.data[i].average
+        this.scaleData(-this.data[i].average)
       );
     }
     endShape();

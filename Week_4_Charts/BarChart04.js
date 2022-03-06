@@ -55,8 +55,8 @@ class BarChart04 {
   }
 
   //This function expects a parameter and scales it using the max value and chart hight
-  scaleData(num) {
-    return map(num, 0, this.maxValue, 0, this.chartHeight);
+  scaleData(num, total) {
+    return map(num, 0, total, 0, this.chartHeight);
   }
 
   drawAxis() {
@@ -103,36 +103,18 @@ class BarChart04 {
         let colorNumb = j % 4;
 
         fill(this.colors[colorNumb]);
-
         rect(
           (this.barWidth + this.spacing) * i,
           0,
           this.barWidth,
-
-          (-this.data[i].values[j].value / this.data[i].total) *
-            this.chartHeight
+          this.scaleData(-this.data[i].values[j].value, this.data[i].total)
         );
         translate(
           0,
-          (-this.data[i].values[j].value / this.data[i].total) *
-            this.chartHeight
+          this.scaleData(-this.data[i].values[j].value, this.data[i].total)
         );
       }
       pop();
-
-      //Bar Value
-      // if (this.showValues) {
-      //   noStroke();
-      //   fill(255);
-      //   textSize(16);
-      //   textAlign(CENTER, BOTTOM);
-      //   text(
-      //     this.data[i].total,
-      //     (this.barWidth + this.spacing) * i + this.barWidth / 2,
-      //     this.scaleData(-this.data[i].total)
-      //   );
-      // }
-
       //Bar Label
       if (this.showLabels) {
         if (this.rotateLabels) {

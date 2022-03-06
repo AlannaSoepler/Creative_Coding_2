@@ -5,9 +5,9 @@ let data = [
     total: 100,
     values: [
       { category: 'USA', value: 25 },
-      { category: 'UK', value: 50 },
-      { category: 'Ireland', value: 20 },
-      { category: 'Norway', value: 5 },
+      { category: 'UK', value: 25 },
+      { category: 'Ireland', value: 25 },
+      { category: 'Norway', value: 25 },
     ],
     average: 95,
   },
@@ -73,9 +73,7 @@ function setup() {
   chart01.margin = 20;
   chart01.labelMargin = 30;
   chart01.titleMargin = 30;
-  console.log(chart01.numTicks);
   chart01.numTicks = 20;
-  console.log(chart01.numTicks);
   chart01.tickMargin = 30;
   chart01.tickSize = 15;
   chart01.numPlaces = 0;

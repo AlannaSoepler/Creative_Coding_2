@@ -162,12 +162,7 @@ class BarChart {
         fill(255, 200);
         stroke(255, 200);
         strokeWeight(2);
-        line(
-          0,
-          this.tickSpacing * -j * 2,
-          this.barWidth,
-          this.tickSpacing * -j * 2
-        );
+        line(0, this.tickSpacing * -j, this.barWidth, this.tickSpacing * -j);
       }
       translate(this.barWidth + this.spacing, 0);
     }
