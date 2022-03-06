@@ -39,7 +39,7 @@ class BarChart06 {
     this.drawAxis();
     this.drawTicks();
     this.drawHorizontalLine();
-    this.drawRects();
+    //this.drawRects();
     this.drawAvg();
     pop();
   }
@@ -162,7 +162,12 @@ class BarChart06 {
     for (let i = 0; i < this.data.length; i++) {
       vertex(
         (this.barWidth + this.spacing) * i + this.barWidth / 2,
-        -this.data[i].average
+        this.scaleData(-this.data[i].average)
+      );
+      ellipse(
+        (this.barWidth + this.spacing) * i + this.barWidth / 2,
+        this.scaleData(-this.data[i].average),
+        5
       );
     }
     endShape();

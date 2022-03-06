@@ -69,20 +69,20 @@ function setup() {
   chart01.chartHeight = 400;
   chart01.pos.posX = 150;
   chart01.pos.posY = 550;
-  chart01.spacing = 30;
-  chart01.margin = 20;
+  chart01.spacing = 15;
+  chart01.margin = 30;
   chart01.labelMargin = 30;
   chart01.titleMargin = 30;
-  chart01.numTicks = 20;
+  chart01.numTicks = 10;
   chart01.tickMargin = 30;
   chart01.tickSize = 15;
+  chart01.tickBar = 10;
   chart01.numPlaces = 0;
   chart01.bodyFontSize = 18;
   chart01.titleFontSize = 24;
   chart01.valueFontSize = 18;
   chart01.verticalAxisMargin = 80;
   chart01.horizontalAxisMargin = 80;
-  //chart01.updateValues();
 
   chart02 = new BarChart02(data);
   chart02.chartWidth = 200;
@@ -115,13 +115,14 @@ function setup() {
   chart06 = new BarChart06(data);
   chart06.chartWidth = 200;
   chart06.chartHeight = 200;
-  chart06.posX = 450;
+  chart06.posX = 900;
   chart06.posY = 900;
   chart06.updateValues();
 }
 
 function draw() {
-  background(50);
+  //background(242, 224, 218);
+  background(93, 114, 127);
   scale(0.6);
   chart01.updateValues();
   chart01.calculateMaxValue();
@@ -134,4 +135,6 @@ function draw() {
   chart04.render();
   chart05.updateValues();
   chart05.render();
+  chart06.updateValues();
+  chart06.render();
 }

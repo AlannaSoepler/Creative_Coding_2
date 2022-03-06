@@ -12,6 +12,7 @@ class BarChart {
     _tickMargin,
     _numTicks,
     _tickSize,
+    _tickBar,
     _numPlaces,
     _bodyFontSize,
     _titleFontSize,
@@ -32,6 +33,7 @@ class BarChart {
     this.numTicks = _numTicks;
     this.tickSize = _tickSize;
     this.tickIncrements;
+    this.tickBar = _tickBar;
     this.numPlaces = _numPlaces;
     this.bodyFontSize = _bodyFontSize;
     this.titleFontSize = _titleFontSize;
@@ -44,20 +46,17 @@ class BarChart {
     this.rotateLabels = false;
 
     this.colors = [
-      //color('#29066b'),
-      //color('#7d3ac1'),
-      //color('#af4bce'),
-      //color('#db4cb2'),
+      color('#af4bce'),
       color('#eb548c'),
       color('#ea7369'),
       color('#f0a58f'),
-      color('#fceea6'),
     ];
     this.updateValues();
     this.calculateMaxValue();
   }
   updateValues() {
     this.tickSpacing = this.chartHeight / this.numTicks; //space between ticks on  the left
+    this.tickBarIncrements = this.chartHeight / this.tickBar;
     this.availableWidth =
       this.chartWidth - this.margin * 2 - this.spacing * (this.data.length - 1); //available space for bars
     this.barWidth = this.availableWidth / this.data.length; //bar width
@@ -158,11 +157,15 @@ class BarChart {
     translate(this.margin, 0);
     this.barValue();
     for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < this.data[i].total / 10; j++) {
-        fill(255, 200);
-        stroke(255, 200);
-        strokeWeight(2);
-        line(0, this.tickSpacing * -j, this.barWidth, this.tickSpacing * -j);
+      for (let j = 0; j < this.data[i].total / this.tickBar; j++) {
+        stroke(255, 100);
+        strokeWeight(1);
+        line(
+          0,
+          this.tickBarIncrements * -j,
+          this.barWidth,
+          this.tickBarIncrements * -j
+        );
       }
       translate(this.barWidth + this.spacing, 0);
     }

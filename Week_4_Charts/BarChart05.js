@@ -18,10 +18,10 @@ class BarChart05 {
     this.rotateLabels = true;
 
     this.colors = [
-      color('#ffe066'),
-      color('#fab666'),
-      color('#f68f6a'),
-      color('#f3646a'),
+      color('#af4bce'),
+      color('#eb548c'),
+      color('#ea7369'),
+      color('#f0a58f'),
     ];
     this.updateValues();
     this.calculateMaxValue();
@@ -157,13 +157,18 @@ class BarChart05 {
     push();
     translate(this.margin, 0);
     noFill();
-    strokeWeight(4);
-    stroke(255);
+    strokeWeight(2);
+    stroke(128, 24, 160);
     beginShape();
     for (let i = 0; i < this.data.length; i++) {
       vertex(
         (this.barWidth + this.spacing) * i + this.barWidth / 2,
         this.scaleData(-this.data[i].average)
+      );
+      ellipse(
+        (this.barWidth + this.spacing) * i + this.barWidth / 2,
+        this.scaleData(-this.data[i].average),
+        3
       );
     }
     endShape();

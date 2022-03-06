@@ -18,10 +18,10 @@ class BarChart04 {
     this.rotateLabels = true;
 
     this.colors = [
-      color('#ffe066'),
-      color('#fab666'),
-      color('#f68f6a'),
-      color('#f3646a'),
+      color('#af4bce'),
+      color('#eb548c'),
+      color('#ea7369'),
+      color('#f0a58f'),
     ];
     this.updateValues();
     this.calculateMaxValue();
