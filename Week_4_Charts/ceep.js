@@ -1,54 +1,32 @@
-class BarChart {
-  constructor(
-    _data,
-    _chartWidth,
-    _chartHeight,
-    _posX,
-    _posY,
-    _spacing,
-    _margin,
-    _labelMargin,
-    _barValueMargin,
-    _titleMargin,
-    _tickMargin,
-    _titleText,
-    _numTicks,
-    _tickSize,
-    _tickBar,
-    _numDecimals,
-    _bodyFontSize,
-    _titleFontSize,
-    _valueFontSize,
-    _verticalAxisTitleText,
-    _verticalAxisMargin,
-    _horizontalAxisTitleText,
-    _horizontalAxisMargin
-  ) {
+class LineChart {
+  constructor(_data, _posX, _posY) {
     this.data = _data;
-    this.chartWidth = _chartWidth;
-    this.chartHeight = _chartHeight;
+    this.chartWidth;
+    this.chartHeight;
     this.pos = createVector(_posX, _posY);
     this.maxValue;
-    this.spacing = _spacing;
-    this.margin = _margin;
-    this.labelMargin = _labelMargin;
-    this.barValueMargin = _barValueMargin;
-    this.titleMargin = _titleMargin;
-    this.tickMargin = _tickMargin;
-    this.titleText = _titleText;
-    this.numTicks = _numTicks;
-    this.tickSize = _tickSize;
+    this.spacing;
+    this.margin;
+    this.labelMargin;
+    this.barValueMargin;
+    this.titleMargin;
+    this.tickMargin;
+    this.titleText;
+    this.numTicks;
+    this.tickSize;
     this.tickIncrements;
-    this.tickBar = _tickBar;
-    this.numDecimals = _numDecimals;
-    this.bodyFontSize = _bodyFontSize;
-    this.titleFontSize = _titleFontSize;
-    this.valueFontSize = _valueFontSize;
-    this.verticalAxisTitleText = _verticalAxisTitleText;
-    this.verticalAxisMargin = _verticalAxisMargin;
-    this.horizontalAxisTitleText = _horizontalAxisTitleText;
-    this.horizontalAxisMargin = _horizontalAxisMargin;
-    this.rounding = 10000;
+    this.tickBar;
+    this.numDecimals;
+    this.bodyFontSize;
+    this.titleFontSize;
+    this.valueFontSize;
+
+    this.rounding;
+    this.rectSize;
+    this.legendMargin;
+    this.legendSpacing;
+    this.rectLegendMargin;
+
     this.showValues = true;
     this.showLabels = true;
     this.rotateLabels = true;
@@ -56,6 +34,7 @@ class BarChart {
     this.showTitle = true;
     this.showVerticalAxisTitle = true;
     this.showHorizontalAxisTitle = true;
+    this.showLegend = true;
 
     this.colors = [
       color('#af4bce'),
@@ -68,7 +47,6 @@ class BarChart {
   }
   updateValues() {
     this.tickSpacing = this.chartHeight / this.numTicks; //space between ticks on  the left
-    this.tickBarIncrements = this.chartHeight / this.tickBar;
     this.availableWidth =
       this.chartWidth - this.margin * 2 - this.spacing * (this.data.length - 1); //available space for bars
     this.barWidth = this.availableWidth / this.data.length; //bar width
@@ -77,16 +55,16 @@ class BarChart {
   render() {
     push();
     translate(this.pos.posX, this.pos.posY);
-    this.title();
-    this.horizontalAxisTitle();
-    this.verticalAxisTitle();
     this.drawAxis();
     this.drawTicks();
+    this.title();
+    this.verticalAxisTitle();
+    this.horizontalAxisTitle();
     this.drawHorizontalLine();
-    this.drawRects();
-    //this.lines();
-    this.textLabel();
-    //this.barValue();
+    this.legend();
+    this.drawLabels();
+    this.line01();
+    this.line02();
     pop();
   }
 
@@ -94,7 +72,6 @@ class BarChart {
     let listValues = this.data.map(function (x) {
       return x.Total_Dwelling;
     });
-
     this.maxValue = max(listValues);
     this.maxValue = Math.ceil(this.maxValue / this.rounding) * this.rounding;
     this.tickIncrements = this.maxValue / this.numTicks;
@@ -106,33 +83,27 @@ class BarChart {
   }
 
   drawAxis() {
-    stroke(199, 206, 211, 180);
-    strokeWeight(2);
+    stroke(255, 180);
+    strokeWeight(1);
     line(0, 0, 0, -this.chartHeight); //y
     line(0, 0, this.chartWidth, 0); //x
   }
 
   drawTicks() {
     for (let i = 0; i <= this.numTicks; i++) {
-      fill(199, 206, 211);
+      stroke(255, 100);
+      line(0, this.tickSpacing * -i, -10, this.tickSpacing * -i);
+
+      //numbers (text)
+      fill(255, 200);
       noStroke();
-      textSize(this.tickSize);
+      textSize(11);
       textAlign(RIGHT, CENTER);
       text(
-        (i * this.tickIncrements).toFixed(this.numDecimals),
-        -this.tickMargin,
+        (i * this.tickIncrements).toFixed(this.numPlaces),
+        -15,
         this.tickSpacing * -i
       );
-    }
-  }
-
-  drawHorizontalLine() {
-    if (this.showHorizontalLine) {
-      for (let i = 0; i <= this.numTicks; i++) {
-        stroke(199, 206, 211, 200);
-        strokeWeight(0.5);
-        line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
-      }
     }
   }
 
@@ -181,63 +152,51 @@ class BarChart {
     }
   }
 
-  lines() {
-    push();
-    translate(this.margin, 0);
-    for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < Math.ceil(this.data[i].Total_Dwelling / 100); j++) {
-        console.log(this.scaleData(this.data[i].Total_Dwelling / 10));
-        stroke(199, 206, 211, 100);
-        strokeWeight(2);
-        line(
-          0,
-          this.tickBarIncrements * -j,
-          this.barWidth,
-          this.tickBarIncrements * -j
-        );
-      }
-      translate(this.barWidth + this.spacing, 0);
+  drawHorizontalLine() {
+    for (let i = 0; i <= this.numTicks; i++) {
+      //ticks
+      stroke(255, 100);
+      line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
     }
-    pop();
   }
 
-  drawRects() {
-    push();
-    translate(this.margin, 0);
-    for (let i = 0; i < this.data.length; i++) {
-      let colorNumb = i % 4;
-      fill(this.colors[colorNumb]);
+  legend() {
+    if (this.showLegend) {
+      rectMode(CENTER);
       noStroke();
+      fill(199, 206, 211);
+      textSize(this.bodyFontSize);
+      textAlign(LEFT, CENTER);
+      fill(this.colors[0]);
       rect(
-        (this.barWidth + this.spacing) * i,
-        0,
-        this.barWidth,
-        this.scaleData(-this.data[i].Total_Dwelling)
+        this.chartWidth + this.rectLegendMargin,
+        -this.chartHeight / 2 - this.legendSpacing,
+        this.rectSize,
+        this.rectSize
+      );
+      fill(199, 206, 211);
+      text(
+        this.legendTitle03,
+        this.chartWidth + this.legendMargin,
+        -this.chartHeight / 2 - this.legendSpacing
+      );
+      fill(this.colors[3]);
+      rect(
+        this.chartWidth + this.rectLegendMargin,
+        -this.chartHeight / 2,
+        this.rectSize,
+        this.rectSize
+      );
+      fill(199, 206, 211);
+      text(
+        this.legendTitle02,
+        this.chartWidth + this.legendMargin,
+        -this.chartHeight / 2
       );
     }
-    pop();
   }
 
-  barValue() {
-    push();
-    translate(this.margin, 0);
-    for (let i = 0; i < this.data.length; i++) {
-      if (this.showValues) {
-        noStroke();
-        fill(199, 206, 211);
-        textSize(this.valueFontSize);
-        textAlign(CENTER, BOTTOM);
-        text(
-          this.data[i].Total_Dwelling,
-          (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].Total_Dwelling) - this.barValueMargin
-        );
-      }
-    }
-    pop();
-  }
-
-  textLabel() {
+  drawLabels() {
     push();
     translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
@@ -256,18 +215,64 @@ class BarChart {
           text(this.data[i].Period, 0, 0);
           pop();
         } else {
+          push();
           noStroke();
           fill(199, 206, 211);
           textSize(this.bodyFontSize);
-          textAlign(CENTER, TOP);
-          text(
-            this.data[i].Period,
+          textAlign(LEFT, CENTER);
+          translate(
             (this.barWidth + this.spacing) * i + this.barWidth / 2,
             this.labelMargin
           );
+          rotate(PI / 2);
+          text(this.data[i].Period, 0, 0);
+          pop();
         }
       }
     }
     pop();
+  }
+
+  line01() {
+    push();
+    translate(this.margin, 0);
+    noFill();
+    stroke(this.colors[3]);
+    strokeWeight(2);
+    beginShape();
+    for (let i = 0; i < this.data.length; i++) {
+      vertex(
+        (this.barWidth + this.spacing) * i + this.barWidth / 2,
+        this.scaleData(-this.data[i].Apartments)
+      );
+      ellipse(
+        (this.barWidth + this.spacing) * i + this.barWidth / 2,
+        this.scaleData(-this.data[i].Apartments),
+        5
+      );
+    }
+    endShape();
+    push();
+  }
+  line02() {
+    push();
+    translate(this.margin, 0);
+    noFill();
+    strokeWeight(2);
+    stroke(this.colors[0]);
+    beginShape();
+    for (let i = 0; i < this.data.length; i++) {
+      vertex(
+        (this.barWidth + this.spacing) * i + this.barWidth / 2,
+        this.scaleData(-this.data[i].All_Houses)
+      );
+      ellipse(
+        (this.barWidth + this.spacing) * i + this.barWidth / 2,
+        this.scaleData(-this.data[i].All_Houses),
+        5
+      );
+    }
+    endShape();
+    push();
   }
 }

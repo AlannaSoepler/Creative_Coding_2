@@ -1,12 +1,14 @@
-class BarChart {
+class HorizontalBarChart {
   constructor(
     _data,
     _chartWidth,
     _chartHeight,
     _posX,
     _posY,
+    _rounding,
     _spacing,
     _margin,
+    _numDecimals,
     _labelMargin,
     _barValueMargin,
     _titleMargin,
@@ -15,7 +17,7 @@ class BarChart {
     _numTicks,
     _tickSize,
     _tickBar,
-    _numDecimals,
+    _numPlaces,
     _bodyFontSize,
     _titleFontSize,
     _valueFontSize,
@@ -28,6 +30,7 @@ class BarChart {
     this.chartWidth = _chartWidth;
     this.chartHeight = _chartHeight;
     this.pos = createVector(_posX, _posY);
+    this.rounding = _rounding;
     this.maxValue;
     this.spacing = _spacing;
     this.margin = _margin;
@@ -48,11 +51,11 @@ class BarChart {
     this.verticalAxisMargin = _verticalAxisMargin;
     this.horizontalAxisTitleText = _horizontalAxisTitleText;
     this.horizontalAxisMargin = _horizontalAxisMargin;
-    this.rounding = 10000;
+
     this.showValues = true;
     this.showLabels = true;
-    this.rotateLabels = true;
-    this.showHorizontalLine = true;
+    this.rotateLabels = false;
+    this.showVerticalLine = true;
     this.showTitle = true;
     this.showVerticalAxisTitle = true;
     this.showHorizontalAxisTitle = true;
@@ -67,73 +70,72 @@ class BarChart {
     this.calculateMaxValue();
   }
   updateValues() {
-    this.tickSpacing = this.chartHeight / this.numTicks; //space between ticks on  the left
-    this.tickBarIncrements = this.chartHeight / this.tickBar;
-    this.availableWidth =
-      this.chartWidth - this.margin * 2 - this.spacing * (this.data.length - 1); //available space for bars
-    this.barWidth = this.availableWidth / this.data.length; //bar width
+    this.tickSpacing = this.chartWidth / this.numTicks; //space between ticks on  the left
+    this.tickBarIncrements = this.chartWidth / this.tickBar;
+    this.availableHight =
+      this.chartHeight -
+      2 * this.margin -
+      (this.data.length - 1) * this.spacing; //available space for bars
+    this.barHight = this.availableHight / this.data.length; //bar width
+    this.completeSpacing = this.barHight + this.spacing;
   }
-
-  render() {
-    push();
-    translate(this.pos.posX, this.pos.posY);
-    this.title();
-    this.horizontalAxisTitle();
-    this.verticalAxisTitle();
-    this.drawAxis();
-    this.drawTicks();
-    this.drawHorizontalLine();
-    this.drawRects();
-    //this.lines();
-    this.textLabel();
-    //this.barValue();
-    pop();
-  }
-
   calculateMaxValue() {
     let listValues = this.data.map(function (x) {
       return x.Total_Dwelling;
     });
-
     this.maxValue = max(listValues);
     this.maxValue = Math.ceil(this.maxValue / this.rounding) * this.rounding;
     this.tickIncrements = this.maxValue / this.numTicks;
   }
-
-  //This function expects a parameter and scales it using the max value and chart hight
-  scaleData(num) {
-    return map(num, 0, this.maxValue, 0, this.chartHeight);
+  render() {
+    push();
+    translate(this.pos.posX, this.pos.posY);
+    this.drawAxis();
+    this.drawTicks();
+    this.drawVerticalLine();
+    this.drawRects();
+    this.title();
+    this.verticalAxisTitle();
+    this.horizontalAxisTitle();
+    this.lines();
+    this.barValue();
+    this.textLabel();
+    pop();
   }
-
+  scaleData(num) {
+    return map(num, 0, this.maxValue, 0, this.chartWidth);
+  }
   drawAxis() {
     stroke(199, 206, 211, 180);
     strokeWeight(2);
-    line(0, 0, 0, -this.chartHeight); //y
-    line(0, 0, this.chartWidth, 0); //x
+    line(0, 0, 0, -this.chartHeight);
+    line(0, 0, this.chartWidth, 0);
   }
-
-  drawTicks() {
-    for (let i = 0; i <= this.numTicks; i++) {
-      fill(199, 206, 211);
-      noStroke();
-      textSize(this.tickSize);
-      textAlign(RIGHT, CENTER);
-      text(
-        (i * this.tickIncrements).toFixed(this.numDecimals),
-        -this.tickMargin,
-        this.tickSpacing * -i
-      );
-    }
-  }
-
-  drawHorizontalLine() {
-    if (this.showHorizontalLine) {
+  drawVerticalLine() {
+    if (this.showVerticalLine) {
       for (let i = 0; i <= this.numTicks; i++) {
         stroke(199, 206, 211, 200);
         strokeWeight(0.5);
-        line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
+        line(this.tickSpacing * i, 0, this.tickSpacing * i, -this.chartHeight);
       }
     }
+  }
+  drawTicks() {
+    push();
+    translate(0, -this.margin);
+    for (let i = 0; i <= this.numTicks; i++) {
+      let drawTick = this.chartWidth / this.numTicks;
+      fill(199, 206, 211);
+      noStroke();
+      textSize(this.tickSize);
+      textAlign(CENTER);
+      push();
+      translate(drawTick * i, this.tickMargin);
+      //rotate(PI / 2);
+      text((this.tickIncrements * i).toFixed(this.numDecimals), 0, 0);
+      pop();
+    }
+    pop();
   }
 
   title() {
@@ -156,7 +158,7 @@ class BarChart {
       noStroke();
       fill(199, 206, 211);
       textSize(this.titleFontSize);
-      textAlign(CENTER, BOTTOM);
+      textAlign(CENTER, RIGHT);
       rotate((3 * PI) / 2);
       text(
         this.verticalAxisTitleText,
@@ -183,36 +185,36 @@ class BarChart {
 
   lines() {
     push();
-    translate(this.margin, 0);
+    translate(0, -this.margin);
     for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < Math.ceil(this.data[i].Total_Dwelling / 100); j++) {
-        console.log(this.scaleData(this.data[i].Total_Dwelling / 10));
+      for (let j = 0; j < this.data[i].total / this.tickBar; j++) {
         stroke(199, 206, 211, 100);
         strokeWeight(2);
         line(
+          this.tickBarIncrements * j,
           0,
-          this.tickBarIncrements * -j,
-          this.barWidth,
-          this.tickBarIncrements * -j
+          this.tickBarIncrements * j,
+          -this.barHight
         );
       }
-      translate(this.barWidth + this.spacing, 0);
+      translate(0, -this.barHight - this.spacing);
     }
     pop();
   }
 
   drawRects() {
     push();
-    translate(this.margin, 0);
+    translate(0, -this.margin);
     for (let i = 0; i < this.data.length; i++) {
       let colorNumb = i % 4;
       fill(this.colors[colorNumb]);
+
       noStroke();
       rect(
-        (this.barWidth + this.spacing) * i,
         0,
-        this.barWidth,
-        this.scaleData(-this.data[i].Total_Dwelling)
+        -this.completeSpacing * i,
+        this.scaleData(this.data[i].Total_Dwelling),
+        -this.barHight
       );
     }
     pop();
@@ -220,26 +222,27 @@ class BarChart {
 
   barValue() {
     push();
-    translate(this.margin, 0);
+    translate(0, -this.margin);
     for (let i = 0; i < this.data.length; i++) {
       if (this.showValues) {
         noStroke();
         fill(199, 206, 211);
         textSize(this.valueFontSize);
-        textAlign(CENTER, BOTTOM);
+        textAlign(LEFT, CENTER);
+        //text(this.data[i].total, 0, 0);
         text(
           this.data[i].Total_Dwelling,
-          (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].Total_Dwelling) - this.barValueMargin
+          this.scaleData(this.data[i].Total_Dwelling) + this.barValueMargin,
+          // this.chartWidth,
+          -this.completeSpacing * i - this.barHight / 2
         );
       }
     }
     pop();
   }
-
   textLabel() {
     push();
-    translate(this.margin, 0);
+    translate(0, -this.margin);
     for (let i = 0; i < this.data.length; i++) {
       if (this.showLabels) {
         if (this.rotateLabels) {
@@ -247,23 +250,24 @@ class BarChart {
           noStroke();
           fill(199, 206, 211);
           textSize(this.bodyFontSize);
-          textAlign(LEFT, CENTER);
-          translate(
-            (this.barWidth + this.spacing) * i + this.barWidth / 2,
-            this.labelMargin
+          textAlign(CENTER, CENTER);
+          translate(0, 0);
+          rotate((3 * PI) / 2);
+          text(
+            this.data[i].Period,
+            this.completeSpacing * i + this.barHight / 2,
+            -this.labelMargin
           );
-          rotate(PI / 3);
-          text(this.data[i].Period, 0, 0);
           pop();
         } else {
           noStroke();
           fill(199, 206, 211);
           textSize(this.bodyFontSize);
-          textAlign(CENTER, TOP);
+          textAlign(CENTER, CENTER);
           text(
             this.data[i].Period,
-            (this.barWidth + this.spacing) * i + this.barWidth / 2,
-            this.labelMargin
+            -this.labelMargin,
+            -this.completeSpacing * i - this.barHight / 2
           );
         }
       }

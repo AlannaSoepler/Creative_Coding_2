@@ -1,54 +1,32 @@
-class BarChart {
-  constructor(
-    _data,
-    _chartWidth,
-    _chartHeight,
-    _posX,
-    _posY,
-    _spacing,
-    _margin,
-    _labelMargin,
-    _barValueMargin,
-    _titleMargin,
-    _tickMargin,
-    _titleText,
-    _numTicks,
-    _tickSize,
-    _tickBar,
-    _numDecimals,
-    _bodyFontSize,
-    _titleFontSize,
-    _valueFontSize,
-    _verticalAxisTitleText,
-    _verticalAxisMargin,
-    _horizontalAxisTitleText,
-    _horizontalAxisMargin
-  ) {
+class HundredStackedBarChart {
+  constructor(_data, _posX, _posY) {
     this.data = _data;
-    this.chartWidth = _chartWidth;
-    this.chartHeight = _chartHeight;
+    this.chartWidth;
+    this.chartHeight;
     this.pos = createVector(_posX, _posY);
     this.maxValue;
-    this.spacing = _spacing;
-    this.margin = _margin;
-    this.labelMargin = _labelMargin;
-    this.barValueMargin = _barValueMargin;
-    this.titleMargin = _titleMargin;
-    this.tickMargin = _tickMargin;
-    this.titleText = _titleText;
-    this.numTicks = _numTicks;
-    this.tickSize = _tickSize;
+    this.spacing;
+    this.margin;
+    this.labelMargin;
+    this.barValueMargin;
+    this.titleMargin;
+    this.tickMargin;
+    this.titleText;
+    this.numTicks;
+    this.tickSize;
     this.tickIncrements;
-    this.tickBar = _tickBar;
-    this.numDecimals = _numDecimals;
-    this.bodyFontSize = _bodyFontSize;
-    this.titleFontSize = _titleFontSize;
-    this.valueFontSize = _valueFontSize;
-    this.verticalAxisTitleText = _verticalAxisTitleText;
-    this.verticalAxisMargin = _verticalAxisMargin;
-    this.horizontalAxisTitleText = _horizontalAxisTitleText;
-    this.horizontalAxisMargin = _horizontalAxisMargin;
-    this.rounding = 10000;
+    this.tickBar;
+    this.numDecimals;
+    this.bodyFontSize;
+    this.titleFontSize;
+    this.valueFontSize;
+
+    this.rounding;
+    this.rectSize;
+    this.legendMargin;
+    this.legendSpacing;
+    this.rectLegendMargin;
+
     this.showValues = true;
     this.showLabels = true;
     this.rotateLabels = true;
@@ -56,6 +34,7 @@ class BarChart {
     this.showTitle = true;
     this.showVerticalAxisTitle = true;
     this.showHorizontalAxisTitle = true;
+    this.showLegend = true;
 
     this.colors = [
       color('#af4bce'),
@@ -84,9 +63,8 @@ class BarChart {
     this.drawTicks();
     this.drawHorizontalLine();
     this.drawRects();
-    //this.lines();
     this.textLabel();
-    //this.barValue();
+    this.legend();
     pop();
   }
 
@@ -94,20 +72,19 @@ class BarChart {
     let listValues = this.data.map(function (x) {
       return x.Total_Dwelling;
     });
-
     this.maxValue = max(listValues);
     this.maxValue = Math.ceil(this.maxValue / this.rounding) * this.rounding;
     this.tickIncrements = this.maxValue / this.numTicks;
   }
 
   //This function expects a parameter and scales it using the max value and chart hight
-  scaleData(num) {
-    return map(num, 0, this.maxValue, 0, this.chartHeight);
+  scaleData(num, total) {
+    return map(num, 0, total, 0, this.chartHeight);
   }
 
   drawAxis() {
     stroke(199, 206, 211, 180);
-    strokeWeight(2);
+    strokeWeight(1);
     line(0, 0, 0, -this.chartHeight); //y
     line(0, 0, this.chartWidth, 0); //x
   }
@@ -127,12 +104,10 @@ class BarChart {
   }
 
   drawHorizontalLine() {
-    if (this.showHorizontalLine) {
-      for (let i = 0; i <= this.numTicks; i++) {
-        stroke(199, 206, 211, 200);
-        strokeWeight(0.5);
-        line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
-      }
+    for (let i = 0; i <= this.numTicks; i++) {
+      stroke(199, 206, 211, 200);
+      strokeWeight(0.5);
+      line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
     }
   }
 
@@ -167,26 +142,11 @@ class BarChart {
     }
   }
 
-  horizontalAxisTitle() {
-    if (this.showHorizontalAxisTitle) {
-      noStroke();
-      fill(199, 206, 211);
-      textSize(this.titleFontSize);
-      textAlign(CENTER, TOP);
-      text(
-        this.horizontalAxisTitleText,
-        this.chartWidth / 2,
-        this.horizontalAxisMargin
-      );
-    }
-  }
-
   lines() {
     push();
     translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < Math.ceil(this.data[i].Total_Dwelling / 100); j++) {
-        console.log(this.scaleData(this.data[i].Total_Dwelling / 10));
+      for (let j = 0; j < this.data[i].total / this.tickBar; j++) {
         stroke(199, 206, 211, 100);
         strokeWeight(2);
         line(
@@ -201,19 +161,49 @@ class BarChart {
     pop();
   }
 
+  horizontalAxisTitle() {
+    if (this.showHorizontalAxisTitle) {
+      noStroke();
+      fill(199, 206, 211);
+      textSize(this.titleFontSize);
+      textAlign(CENTER, TOP);
+      text(
+        this.horizontalAxisTitleText,
+        this.chartWidth / 2,
+        this.horizontalAxisMargin
+      );
+    }
+  }
+
   drawRects() {
     push();
     translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
-      let colorNumb = i % 4;
-      fill(this.colors[colorNumb]);
       noStroke();
-      rect(
-        (this.barWidth + this.spacing) * i,
-        0,
-        this.barWidth,
-        this.scaleData(-this.data[i].Total_Dwelling)
-      );
+      push();
+      for (let j = 0; j < 1; j++) {
+        let colorNumb = i % 1;
+
+        fill(this.colors[colorNumb]);
+        rect(
+          (this.barWidth + this.spacing) * i,
+          0,
+          this.barWidth,
+          this.scaleData(-this.data[i].All_Houses, this.data[i].Total_Dwelling)
+        );
+        translate(
+          0,
+          this.scaleData(-this.data[i].All_Houses, this.data[i].Total_Dwelling)
+        );
+        fill(this.colors[colorNumb + 1]);
+        rect(
+          (this.barWidth + this.spacing) * i,
+          0,
+          this.barWidth,
+          this.scaleData(-this.data[i].Apartments, this.data[i].Total_Dwelling)
+        );
+      }
+      pop();
     }
     pop();
   }
@@ -228,13 +218,62 @@ class BarChart {
         textSize(this.valueFontSize);
         textAlign(CENTER, BOTTOM);
         text(
-          this.data[i].Total_Dwelling,
+          this.data[i].Apartments,
           (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].Total_Dwelling) - this.barValueMargin
+          this.scaleData(-this.data[i].Apartments) - this.barValueMargin
         );
       }
     }
     pop();
+  }
+
+  legend() {
+    if (this.showLegend) {
+      rectMode(CENTER);
+      noStroke();
+      fill(199, 206, 211);
+      textSize(this.bodyFontSize);
+      textAlign(LEFT, CENTER);
+      fill('#eb548c');
+      rect(
+        this.chartWidth + this.rectLegendMargin,
+        -this.chartHeight / 2 - this.legendSpacing,
+        this.rectSize,
+        this.rectSize
+      );
+      fill(199, 206, 211);
+      text(
+        this.legendTitle03,
+        this.chartWidth + this.legendMargin,
+        -this.chartHeight / 2 - this.legendSpacing
+      );
+      fill('#ea7369');
+      rect(
+        this.chartWidth + this.rectLegendMargin,
+        -this.chartHeight / 2,
+        this.rectSize,
+        this.rectSize
+      );
+      fill(199, 206, 211);
+      text(
+        this.legendTitle02,
+        this.chartWidth + this.legendMargin,
+        -this.chartHeight / 2
+      );
+      fill('#af4bce');
+      rect(
+        this.chartWidth + this.rectLegendMargin,
+        -this.chartHeight / 2 + this.legendSpacing,
+        this.rectSize,
+        this.rectSize
+      );
+      fill(199, 206, 211);
+      text(
+        this.legendTitle01,
+        this.chartWidth + this.legendMargin,
+        -this.chartHeight / 2 + this.legendSpacing
+      );
+    }
   }
 
   textLabel() {
@@ -256,18 +295,44 @@ class BarChart {
           text(this.data[i].Period, 0, 0);
           pop();
         } else {
+          push();
           noStroke();
           fill(199, 206, 211);
           textSize(this.bodyFontSize);
-          textAlign(CENTER, TOP);
-          text(
-            this.data[i].Period,
+          textAlign(LEFT, CENTER);
+          translate(
             (this.barWidth + this.spacing) * i + this.barWidth / 2,
             this.labelMargin
           );
+          rotate(PI / 2);
+          text(this.data[i].Period, 0, 0);
+          pop();
         }
       }
     }
+    pop();
+  }
+
+  //Need to add it to scale
+  drawAvg() {
+    push();
+    translate(this.margin, 0);
+    noFill();
+    strokeWeight(3);
+    stroke(128, 24, 160);
+    beginShape();
+    for (let i = 0; i < this.data.length; i++) {
+      vertex(
+        (this.barWidth + this.spacing) * i + this.barWidth / 2,
+        this.scaleData(-this.data[i].average)
+      );
+      ellipse(
+        (this.barWidth + this.spacing) * i + this.barWidth / 2,
+        this.scaleData(-this.data[i].average),
+        6
+      );
+    }
+    endShape();
     pop();
   }
 }
