@@ -1,51 +1,3 @@
-//Array of objects
-let data = [
-  {
-    name: 'Oranges',
-    total: 100,
-    values: [
-      { category: 'USA', value: 25 },
-      { category: 'UK', value: 25 },
-      { category: 'Ireland', value: 25 },
-      { category: 'Norway', value: 25 },
-    ],
-    average: 95,
-  },
-  {
-    name: 'Bananas',
-    total: 73,
-    values: [
-      { category: 'USA', value: 13 },
-      { category: 'UK', value: 20 },
-      { category: 'Ireland', value: 20 },
-      { category: 'Norway', value: 20 },
-    ],
-    average: 65,
-  },
-  {
-    name: 'Pears',
-    total: 23,
-    values: [
-      { category: 'USA', value: 7 },
-      { category: 'UK', value: 7 },
-      { category: 'Ireland', value: 5 },
-      { category: 'Norway', value: 4 },
-    ],
-    average: 5,
-  },
-  {
-    name: 'Apples',
-    total: 48,
-    values: [
-      { category: 'USA', value: 22 },
-      { category: 'UK', value: 6 },
-      { category: 'Ireland', value: 11 },
-      { category: 'Norway', value: 9 },
-    ],
-    average: 25,
-  },
-];
-
 let chart01;
 let chart02;
 let chart03;
@@ -58,11 +10,11 @@ function setup() {
   textFont(bodyFont);
 
   chart01 = new BarChart(data02);
-  chart01.chartWidth = 400;
+  chart01.chartWidth = 800;
   chart01.chartHeight = 400;
   chart01.pos.posX = 900;
   chart01.pos.posY = 1300;
-  chart01.spacing = 5;
+  chart01.spacing = 10;
   chart01.margin = 20;
   chart01.labelMargin = 20;
   chart01.barValueMargin = 10;
@@ -75,7 +27,7 @@ function setup() {
   chart01.numDecimals = 0;
   chart01.bodyFontSize = 18;
   chart01.titleFontSize = 34;
-  chart01.valueFontSize = 24;
+  chart01.valueFontSize = 16;
   chart01.verticalAxisTitleText = 'Amount';
   chart01.verticalAxisMargin = 80;
   chart01.horizontalAxisTitleText = 'Categories';
@@ -84,8 +36,8 @@ function setup() {
   chart02 = new HorizontalBarChart(data02);
   chart02.chartWidth = 400;
   chart02.chartHeight = 400;
-  chart02.pos.posX = 900;
-  chart02.pos.posY = 550;
+  chart02.pos.posX = 1650;
+  chart02.pos.posY = 1300;
   chart02.spacing = 10;
   chart02.rounding = 1000;
   chart02.margin = 20;
@@ -126,7 +78,7 @@ function setup() {
   chart03.numDecimals = 0;
   chart03.bodyFontSize = 18;
   chart03.titleFontSize = 34;
-  chart03.valueFontSize = 24;
+  chart03.valueFontSize = 16;
   chart03.verticalAxisTitleText = 'Amount';
   chart03.verticalAxisMargin = 80;
   chart03.horizontalAxisTitleText = 'Categories';
@@ -160,7 +112,7 @@ function setup() {
   chart04.numDecimals = 0;
   chart04.bodyFontSize = 18;
   chart04.titleFontSize = 34;
-  chart04.valueFontSize = 24;
+  chart04.valueFontSize = 16;
   chart04.verticalAxisTitleText = 'Amount';
   chart04.verticalAxisMargin = 80;
   chart04.horizontalAxisTitleText = 'Categories';
@@ -176,7 +128,7 @@ function setup() {
   chart04.updateValues();
 
   chart05 = new LineChart(data02);
-  chart05.chartWidth = 400;
+  chart05.chartWidth = 1000;
   chart05.chartHeight = 400;
   chart05.pos.posX = 150;
   chart05.pos.posY = 550;

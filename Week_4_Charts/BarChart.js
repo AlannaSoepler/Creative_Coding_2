@@ -84,9 +84,8 @@ class BarChart {
     this.drawTicks();
     this.drawHorizontalLine();
     this.drawRects();
-    //this.lines();
     this.textLabel();
-    //this.barValue();
+    this.barValue();
     pop();
   }
 
@@ -179,26 +178,6 @@ class BarChart {
         this.horizontalAxisMargin
       );
     }
-  }
-
-  lines() {
-    push();
-    translate(this.margin, 0);
-    for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < Math.ceil(this.data[i].Total_Dwelling / 100); j++) {
-        console.log(this.scaleData(this.data[i].Total_Dwelling / 10));
-        stroke(199, 206, 211, 100);
-        strokeWeight(2);
-        line(
-          0,
-          this.tickBarIncrements * -j,
-          this.barWidth,
-          this.tickBarIncrements * -j
-        );
-      }
-      translate(this.barWidth + this.spacing, 0);
-    }
-    pop();
   }
 
   drawRects() {

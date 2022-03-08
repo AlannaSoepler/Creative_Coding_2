@@ -63,6 +63,7 @@ class HundredStackedBarChart {
     this.drawTicks();
     this.drawHorizontalLine();
     this.drawRects();
+    this.barValue();
     this.textLabel();
     this.legend();
     pop();
@@ -142,25 +143,6 @@ class HundredStackedBarChart {
     }
   }
 
-  lines() {
-    push();
-    translate(this.margin, 0);
-    for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < this.data[i].total / this.tickBar; j++) {
-        stroke(199, 206, 211, 100);
-        strokeWeight(2);
-        line(
-          0,
-          this.tickBarIncrements * -j,
-          this.barWidth,
-          this.tickBarIncrements * -j
-        );
-      }
-      translate(this.barWidth + this.spacing, 0);
-    }
-    pop();
-  }
-
   horizontalAxisTitle() {
     if (this.showHorizontalAxisTitle) {
       noStroke();
@@ -214,15 +196,32 @@ class HundredStackedBarChart {
     for (let i = 0; i < this.data.length; i++) {
       if (this.showValues) {
         noStroke();
+        push();
         fill(199, 206, 211);
         textSize(this.valueFontSize);
-        textAlign(CENTER, BOTTOM);
+        textAlign(CENTER, CENTER);
+        text(
+          this.data[i].All_Houses,
+          (this.barWidth + this.spacing) * i + this.barWidth / 2,
+          this.scaleData(
+            -this.data[i].All_Houses,
+            this.data[i].Total_Dwelling
+          ) / 2
+        );
+        translate(
+          0,
+          this.scaleData(-this.data[i].All_Houses, this.data[i].Total_Dwelling)
+        );
         text(
           this.data[i].Apartments,
           (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].Apartments) - this.barValueMargin
+          this.scaleData(
+            -this.data[i].Apartments,
+            this.data[i].Total_Dwelling
+          ) / 2
         );
       }
+      pop();
     }
     pop();
   }
@@ -234,19 +233,6 @@ class HundredStackedBarChart {
       fill(199, 206, 211);
       textSize(this.bodyFontSize);
       textAlign(LEFT, CENTER);
-      fill('#eb548c');
-      rect(
-        this.chartWidth + this.rectLegendMargin,
-        -this.chartHeight / 2 - this.legendSpacing,
-        this.rectSize,
-        this.rectSize
-      );
-      fill(199, 206, 211);
-      text(
-        this.legendTitle03,
-        this.chartWidth + this.legendMargin,
-        -this.chartHeight / 2 - this.legendSpacing
-      );
       fill('#ea7369');
       rect(
         this.chartWidth + this.rectLegendMargin,

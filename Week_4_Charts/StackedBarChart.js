@@ -63,6 +63,7 @@ class StackedBarChart {
     this.drawTicks();
     this.drawHorizontalLine();
     this.drawRects();
+    this.barValue();
     this.textLabel();
     this.legend();
     pop();
@@ -220,15 +221,29 @@ class StackedBarChart {
     for (let i = 0; i < this.data.length; i++) {
       if (this.showValues) {
         noStroke();
+        push();
         fill(199, 206, 211);
         textSize(this.valueFontSize);
-        textAlign(CENTER, BOTTOM);
+        textAlign(CENTER, CENTER);
+        text(
+          this.data[i].All_Houses,
+          (this.barWidth + this.spacing) * i + this.barWidth / 2,
+          this.scaleData(-this.data[i].Multi_Development_Housing) / 2
+        );
+        translate(0, this.scaleData(-this.data[i].Multi_Development_Housing));
         text(
           this.data[i].Apartments,
           (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].Apartments) - this.barValueMargin
+          this.scaleData(-this.data[i].One_Off_Housing) / 2
+        );
+        translate(0, this.scaleData(-this.data[i].One_Off_Housing));
+        text(
+          this.data[i].Apartments,
+          (this.barWidth + this.spacing) * i + this.barWidth / 2,
+          this.scaleData(-this.data[i].Apartments) / 2
         );
       }
+      pop();
     }
     pop();
   }

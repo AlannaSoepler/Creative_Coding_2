@@ -97,7 +97,6 @@ class HorizontalBarChart {
     this.title();
     this.verticalAxisTitle();
     this.horizontalAxisTitle();
-    this.lines();
     this.barValue();
     this.textLabel();
     pop();
@@ -183,25 +182,6 @@ class HorizontalBarChart {
     }
   }
 
-  lines() {
-    push();
-    translate(0, -this.margin);
-    for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < this.data[i].total / this.tickBar; j++) {
-        stroke(199, 206, 211, 100);
-        strokeWeight(2);
-        line(
-          this.tickBarIncrements * j,
-          0,
-          this.tickBarIncrements * j,
-          -this.barHight
-        );
-      }
-      translate(0, -this.barHight - this.spacing);
-    }
-    pop();
-  }
-
   drawRects() {
     push();
     translate(0, -this.margin);
@@ -240,6 +220,7 @@ class HorizontalBarChart {
     }
     pop();
   }
+  
   textLabel() {
     push();
     translate(0, -this.margin);
