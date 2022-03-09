@@ -18,7 +18,6 @@ class StackedBarChart {
     this.numDecimals;
     this.bodyFontSize;
     this.titleFontSize;
-    this.valueFontSize;
     this.horizontalFontSize;
     this.verticalFontSize;
     this.legendFontSize;
@@ -52,6 +51,10 @@ class StackedBarChart {
     this.availableWidth =
       this.chartWidth - this.margin * 2 - this.spacing * (this.data.length - 1); //available space for bars
     this.barWidth = this.availableWidth / this.data.length; //bar width
+  }
+
+  updateGuiVals(font) {
+    this.valueFontSize = font;
   }
 
   render() {

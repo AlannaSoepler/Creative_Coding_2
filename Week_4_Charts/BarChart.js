@@ -1,7 +1,6 @@
 class BarChart {
   constructor(_data, _posX, _posY) {
     this.data = _data;
-    this.chartWidth;
     this.chartHeight;
     this.pos = createVector(_posX, _posY);
     this.maxValue;
@@ -27,13 +26,7 @@ class BarChart {
     this.horizontalFontSize;
     this.verticalFontSize;
     this.rounding;
-    this.showValues = true;
-    this.showLabels = true;
     this.rotateLabels = true;
-    this.showHorizontalLine = true;
-    this.showTitle = true;
-    this.showVerticalAxisTitle = true;
-    this.showHorizontalAxisTitle = true;
 
     this.colors = [
       color('#af4bce'),
@@ -50,6 +43,16 @@ class BarChart {
     this.availableWidth =
       this.chartWidth - this.margin * 2 - this.spacing * (this.data.length - 1); //available space for bars
     this.barWidth = this.availableWidth / this.data.length; //bar width
+  }
+
+  updateGuiVals(font, title, vTitle, hTitle, value, label, hline) {
+    this.valueFontSize = font;
+    this.showTitle = title;
+    this.showVerticalAxisTitle = vTitle;
+    this.showHorizontalAxisTitle = hTitle;
+    this.showValues = value;
+    this.showLabels = label;
+    this.showHorizontalLine = hline;
   }
 
   render() {
@@ -262,6 +265,7 @@ class BarChart {
           text(this.data[i].Period, 0, 0);
           pop();
         } else {
+          push();
           noStroke();
           fill(199, 206, 211);
           textSize(this.bodyFontSize);
@@ -271,6 +275,8 @@ class BarChart {
             (this.barWidth + this.spacing) * i + this.barWidth / 2,
             this.labelMargin
           );
+          rotate((2 * PI) / 3);
+          pop();
         }
       }
     }

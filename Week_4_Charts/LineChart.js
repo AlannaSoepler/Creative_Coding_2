@@ -22,7 +22,6 @@ class LineChart {
     this.tickSize;
     this.bodyFontSize;
     this.titleFontSize;
-    this.valueFontSize;
     this.ellipseSize;
     this.verticalFontSize;
     this.horizontalFontSize;

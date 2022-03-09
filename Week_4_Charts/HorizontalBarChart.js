@@ -19,7 +19,6 @@ class HorizontalBarChart {
     this.numDecimals;
     this.bodyFontSize;
     this.titleFontSize;
-    this.valueFontSize;
     this.verticalAxisTitleText;
     this.verticalAxisMargin;
     this.horizontalAxisTitleText;
@@ -83,6 +82,10 @@ class HorizontalBarChart {
   }
   scaleData(num) {
     return map(num, 0, this.maxValue, 0, this.chartWidth);
+  }
+
+  updateGuiVals(font) {
+    this.valueFontSize = font;
   }
   drawAxis() {
     stroke(199, 206, 211, 180);

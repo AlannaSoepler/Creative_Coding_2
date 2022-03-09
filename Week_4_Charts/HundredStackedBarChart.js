@@ -18,7 +18,6 @@ class HundredStackedBarChart {
     this.numDecimals;
     this.bodyFontSize;
     this.titleFontSize;
-    this.valueFontSize;
     this.horizontalFontSize;
     this.verticalFontSize;
 
@@ -89,6 +88,10 @@ class HundredStackedBarChart {
   //The other is total value of that object .
   scaleData(num, total) {
     return map(num, 0, total, 0, this.chartHeight);
+  }
+
+  updateGuiVals(font) {
+    this.valueFontSize = font;
   }
 
   drawAxis() {

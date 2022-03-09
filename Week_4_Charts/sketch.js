@@ -6,7 +6,13 @@ let chart04;
 let chart05;
 //Fill the object with these values.
 let params = {
-  zoom: 1,
+  font: 12,
+  title: true,
+  vTitle: true,
+  hTitle: true,
+  value: true,
+  label: true,
+  hline: true,
 };
 
 var gui;
@@ -15,18 +21,6 @@ function setup() {
   createCanvas(2000, 2500);
   generateData();
   textFont(bodyFont);
-
-  //Changing the value of the zoom variable
-  gui = QuickSettings.create(550, 25, 'Chart Zoom').addRange(
-    'Zoom',
-    0,
-    2,
-    params.zoom,
-    0.1,
-    function (value) {
-      params.zoom = value;
-    }
-  );
 
   chart01 = new BarChart(data02);
   chart01.chartWidth = 600;
@@ -46,7 +40,6 @@ function setup() {
   chart01.numDecimals = 0;
   chart01.bodyFontSize = 18;
   chart01.titleFontSize = 20;
-  chart01.valueFontSize = 12;
   chart01.verticalAxisTitleText = 'Amount Of Permissions';
   chart01.verticalAxisMargin = 90;
   chart01.horizontalAxisTitleText = 'Yearly Quatres';
@@ -55,7 +48,7 @@ function setup() {
   chart01.verticalFontSize = 18;
 
   chart02 = new HorizontalBarChart(data02);
-  chart02.chartWidth = 400;
+  chart02.chartWidth = 600;
   chart02.chartHeight = 400;
   chart02.pos.posX = 1200;
   chart02.pos.posY = 550;
@@ -72,7 +65,6 @@ function setup() {
   chart02.numDecimals = 0;
   chart02.bodyFontSize = 16;
   chart02.titleFontSize = 20;
-  chart02.valueFontSize = 12;
   chart02.verticalAxisTitleText = 'Yearly Quatres';
   chart02.verticalAxisMargin = 90;
   chart02.horizontalAxisTitleText = 'Amount of Permissions';
@@ -98,7 +90,6 @@ function setup() {
   chart03.numDecimals = 0;
   chart03.bodyFontSize = 16;
   chart03.titleFontSize = 20;
-  chart03.valueFontSize = 12;
   chart03.legendFontSize = 16;
   chart03.verticalAxisTitleText = 'Amount Of Permissions';
   chart03.verticalAxisMargin = 90;
@@ -133,7 +124,6 @@ function setup() {
   chart04.numDecimals = 0;
   chart04.bodyFontSize = 18;
   chart04.titleFontSize = 20;
-  chart04.valueFontSize = 12;
   chart04.verticalFontSize = 18;
   chart04.horizontalFontSize = 18;
   chart04.verticalAxisTitleText = 'Amount Of Permissions';
@@ -149,7 +139,7 @@ function setup() {
   chart04.rectLegendMargin = 35;
 
   chart05 = new LineChart(data02);
-  chart05.chartWidth = 700;
+  chart05.chartWidth = 600;
   chart05.chartHeight = 300;
   chart05.pos.posX = 150;
   chart05.pos.posY = 450;
@@ -180,23 +170,45 @@ function setup() {
   chart05.legendSpacing = 20;
   chart05.rectLegendMargin = 35;
   chart05.ellipseSize = 5;
+
+  gui = createGui('Change the number of bars');
+  gui.addObject(params);
 }
 
 function draw() {
   background(93, 114, 127);
-  scale(params.zoom);
   chart01.updateValues();
   chart01.calculateMaxValue();
   chart01.render();
+  chart01.updateGuiVals(
+    params.font,
+    params.title,
+    params.vTitle,
+    params.hTitle,
+    params.value,
+    params.label,
+    params.hline
+  );
   chart02.updateValues();
   chart02.calculateMaxValue();
   chart02.render();
+  chart02.updateGuiVals(
+    params.font,
+    params.title,
+    params.vTitle,
+    params.hTitle,
+    params.value,
+    params.label,
+    params.hline
+  );
   chart03.updateValues();
   chart03.calculateMaxValue();
   chart03.render();
+  chart03.updateGuiVals(params.font);
   chart04.calculateMaxValue();
   chart04.updateValues();
   chart04.render();
+  chart04.updateGuiVals(params.font);
   chart05.calculateMaxValue();
   chart05.updateValues();
   chart05.render();
