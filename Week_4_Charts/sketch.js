@@ -12,7 +12,8 @@ let params = {
   hTitle: true,
   value: true,
   label: true,
-  hline: true,
+  hLine: true,
+  spacing: 10,
 };
 
 var gui;
@@ -27,7 +28,7 @@ function setup() {
   chart01.chartHeight = 400;
   chart01.pos.posX = 150;
   chart01.pos.posY = 1900;
-  chart01.spacing = 10;
+  // chart01.spacing = 10;
   chart01.margin = 20;
   chart01.labelMargin = 20;
   chart01.barValueMargin = 10;
@@ -187,20 +188,13 @@ function draw() {
     params.hTitle,
     params.value,
     params.label,
-    params.hline
+    params.hLine,
+    params.spacing
   );
   chart02.updateValues();
   chart02.calculateMaxValue();
   chart02.render();
-  chart02.updateGuiVals(
-    params.font,
-    params.title,
-    params.vTitle,
-    params.hTitle,
-    params.value,
-    params.label,
-    params.hline
-  );
+  chart02.updateGuiVals(params.font);
   chart03.updateValues();
   chart03.calculateMaxValue();
   chart03.render();

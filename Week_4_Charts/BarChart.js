@@ -4,7 +4,6 @@ class BarChart {
     this.chartHeight;
     this.pos = createVector(_posX, _posY);
     this.maxValue;
-    this.spacing;
     this.margin;
     this.labelMargin;
     this.barValueMargin;
@@ -45,14 +44,16 @@ class BarChart {
     this.barWidth = this.availableWidth / this.data.length; //bar width
   }
 
-  updateGuiVals(font, title, vTitle, hTitle, value, label, hline) {
+  //takes the value from the gui 
+  updateGuiVals(font, title, vTitle, hTitle, value, label, hLine, spacing) {
     this.valueFontSize = font;
     this.showTitle = title;
     this.showVerticalAxisTitle = vTitle;
     this.showHorizontalAxisTitle = hTitle;
     this.showValues = value;
     this.showLabels = label;
-    this.showHorizontalLine = hline;
+    this.showHorizontalLine = hLine;
+    this.spacing = spacing;
   }
 
   render() {
