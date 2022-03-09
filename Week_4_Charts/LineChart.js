@@ -4,31 +4,30 @@ class LineChart {
     this.chartWidth;
     this.chartHeight;
     this.pos = createVector(_posX, _posY);
-    this.maxValue;
     this.spacing;
     this.margin;
-    this.labelMargin;
-    this.barValueMargin;
     this.titleMargin;
     this.tickMargin;
-    this.titleText;
     this.numTicks;
-    this.tickSize;
+    this.titleText;
+    this.rectSize;
+    this.legendMargin;
+    this.legendSpacing;
+    this.maxValue;
+    this.rounding;
+    this.rectLegendMargin;
     this.tickIncrements;
-    this.tickBar;
     this.numDecimals;
+
+    this.tickSize;
     this.bodyFontSize;
     this.titleFontSize;
     this.valueFontSize;
     this.ellipseSize;
+    this.verticalFontSize;
+    this.horizontalFontSize;
+    this.legendFontSize;
 
-    this.rounding;
-    this.rectSize;
-    this.legendMargin;
-    this.legendSpacing;
-    this.rectLegendMargin;
-
-    this.showValues = true;
     this.showLabels = true;
     this.rotateLabels = true;
     this.showHorizontalLine = true;
@@ -48,7 +47,6 @@ class LineChart {
   }
   updateValues() {
     this.tickSpacing = this.chartHeight / this.numTicks; //space between ticks on  the left
-    this.tickBarIncrements = this.chartHeight / this.tickBar;
     this.availableWidth =
       this.chartWidth - this.margin * 2 - this.spacing * (this.data.length - 1); //available space for bars
     this.barWidth = this.availableWidth / this.data.length; //bar width
@@ -71,11 +69,17 @@ class LineChart {
   }
 
   calculateMaxValue() {
+    //Assigning a variable called listValues
+    //creates a new array of all the values withing the data.total_Dwelling
     let listValues = this.data.map(function (x) {
       return x.Total_Dwelling;
     });
+
+    //Finds the hights number
     this.maxValue = max(listValues);
+    //Rounds up the highest number
     this.maxValue = Math.ceil(this.maxValue / this.rounding) * this.rounding;
+    //Calculates the value that will be displayed by the ticks
     this.tickIncrements = this.maxValue / this.numTicks;
   }
 
@@ -90,13 +94,18 @@ class LineChart {
     line(0, 0, 0, -this.chartHeight); //y
     line(0, 0, this.chartWidth, 0); //x
   }
-
+  //Draws the ticks
   drawTicks() {
+    //iterates based on the value of numTicks
     for (let i = 0; i <= this.numTicks; i++) {
       fill(199, 206, 211);
       noStroke();
+      //The size will be given in the sketch
       textSize(this.tickSize);
+      //Where the text will be drawn from
       textAlign(RIGHT, CENTER);
+      //Takes the value that was calculated above and multiplies it by i
+      //Then i make sure it has no decimals by using the toFixed command
       text(
         (i * this.tickIncrements).toFixed(this.numDecimals),
         -this.tickMargin,
@@ -105,20 +114,30 @@ class LineChart {
     }
   }
 
+  //Draws the horizontal lines
   drawHorizontalLine() {
-    for (let i = 0; i <= this.numTicks; i++) {
-      stroke(199, 206, 211, 200);
-      strokeWeight(0.5);
-      line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
+    //If this is true draw the horizontal lines
+    //Iterates based on the value of numTicks
+    if (this.showHorizontalLine) {
+      for (let i = 0; i <= this.numTicks; i++) {
+        //give the color slight opacity
+        stroke(199, 206, 211, 200);
+        strokeWeight(0.5);
+        //Same as in draw ticks. Will draw at the same place, but it will be as long as the chart
+        line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
+      }
     }
   }
 
+  //Draws the title
   title() {
+    //If this is true draw the title
     if (this.showTitle) {
       noStroke();
       fill(199, 206, 211);
       textSize(this.titleFontSize);
       textAlign(CENTER, BOTTOM);
+      //TitleMargin to give it more space from the top of the chart
       text(
         this.titleText,
         this.chartWidth / 2,
@@ -127,13 +146,15 @@ class LineChart {
     }
   }
 
+  //Draws the vertical axis title
   verticalAxisTitle() {
     if (this.showVerticalAxisTitle) {
       push();
       noStroke();
       fill(199, 206, 211);
-      textSize(this.titleFontSize);
+      textSize(this.verticalFontSize);
       textAlign(CENTER, BOTTOM);
+      //Rotates text
       rotate((3 * PI) / 2);
       text(
         this.verticalAxisTitleText,
@@ -144,30 +165,12 @@ class LineChart {
     }
   }
 
-  lines() {
-    push();
-    translate(this.margin, 0);
-    for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < this.data[i].total / this.tickBar; j++) {
-        stroke(199, 206, 211, 100);
-        strokeWeight(2);
-        line(
-          0,
-          this.tickBarIncrements * -j,
-          this.barWidth,
-          this.tickBarIncrements * -j
-        );
-      }
-      translate(this.barWidth + this.spacing, 0);
-    }
-    pop();
-  }
-
+  //Draws the horizontal axis title
   horizontalAxisTitle() {
     if (this.showHorizontalAxisTitle) {
       noStroke();
       fill(199, 206, 211);
-      textSize(this.titleFontSize);
+      textSize(this.horizontalFontSize);
       textAlign(CENTER, TOP);
       text(
         this.horizontalAxisTitleText,
@@ -177,47 +180,14 @@ class LineChart {
     }
   }
 
-  barValue() {
-    push();
-    translate(this.margin, 0);
-    for (let i = 0; i < this.data.length; i++) {
-      if (this.showValues) {
-        noStroke();
-        fill(199, 206, 211);
-        textSize(this.valueFontSize);
-        textAlign(CENTER, BOTTOM);
-        text(
-          this.data[i].Apartments,
-          (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].Apartments) - this.barValueMargin
-        );
-      }
-    }
-    pop();
-    console.log('Hello');
-  }
-
   legend() {
     if (this.showLegend) {
       rectMode(CENTER);
       noStroke();
       fill(199, 206, 211);
-      textSize(this.bodyFontSize);
+      textSize(this.legendFontSize);
       textAlign(LEFT, CENTER);
-      fill('#eb548c');
-      rect(
-        this.chartWidth + this.rectLegendMargin,
-        -this.chartHeight / 2 - this.legendSpacing,
-        this.rectSize,
-        this.rectSize
-      );
-      fill(199, 206, 211);
-      text(
-        this.legendTitle03,
-        this.chartWidth + this.legendMargin,
-        -this.chartHeight / 2 - this.legendSpacing
-      );
-      fill('#ea7369');
+      fill(this.colors[3]);
       rect(
         this.chartWidth + this.rectLegendMargin,
         -this.chartHeight / 2,
@@ -230,7 +200,7 @@ class LineChart {
         this.chartWidth + this.legendMargin,
         -this.chartHeight / 2
       );
-      fill('#af4bce');
+      fill(this.colors[0]);
       rect(
         this.chartWidth + this.rectLegendMargin,
         -this.chartHeight / 2 + this.legendSpacing,
@@ -283,46 +253,56 @@ class LineChart {
     pop();
   }
 
+  //Quite similar to the setup of the bar in a normal bar chart
   line01() {
     push();
     translate(this.margin, 0);
+    //Important to not have a fill or else the shape will look weird
     noFill();
     stroke(this.colors[3]);
     strokeWeight(2);
+    //Instead of rect i create a new shape. The y position of each corner of that chape depends on the scaled value
     beginShape();
     for (let i = 0; i < this.data.length; i++) {
       vertex(
         (this.barWidth + this.spacing) * i + this.barWidth / 2,
         this.scaleData(-this.data[i].Apartments)
       );
+      //To create a small ellipse on every corner of the shape i created
       ellipse(
         (this.barWidth + this.spacing) * i + this.barWidth / 2,
         this.scaleData(-this.data[i].Apartments),
         this.ellipseSize
       );
     }
+    //Ends the shape i created
     endShape();
     pop();
   }
 
+  //Quite similar to the setup of the bar in a normal bar chart
   line02() {
     push();
     translate(this.margin, 0);
+    //Important to not have a fill or else the shape will look weird
     noFill();
     strokeWeight(2);
     stroke(this.colors[0]);
+    //Instead of rect i create a new shape. The y position of each corner of that chape depends on the scaled value
     beginShape();
     for (let i = 0; i < this.data.length; i++) {
       vertex(
         (this.barWidth + this.spacing) * i + this.barWidth / 2,
         this.scaleData(-this.data[i].All_Houses)
       );
+      //To create a small ellipse on every corner of the shape i created
       ellipse(
         (this.barWidth + this.spacing) * i + this.barWidth / 2,
         this.scaleData(-this.data[i].All_Houses),
         this.ellipseSize
       );
     }
+    //Ends the shape i created
     endShape();
     pop();
   }

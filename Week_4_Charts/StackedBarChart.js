@@ -15,11 +15,13 @@ class StackedBarChart {
     this.numTicks;
     this.tickSize;
     this.tickIncrements;
-    this.tickBar;
     this.numDecimals;
     this.bodyFontSize;
     this.titleFontSize;
     this.valueFontSize;
+    this.horizontalFontSize;
+    this.verticalFontSize;
+    this.legendFontSize;
 
     this.rounding;
     this.rectSize;
@@ -47,7 +49,6 @@ class StackedBarChart {
   }
   updateValues() {
     this.tickSpacing = this.chartHeight / this.numTicks; //space between ticks on  the left
-    this.tickBarIncrements = this.chartHeight / this.tickBar;
     this.availableWidth =
       this.chartWidth - this.margin * 2 - this.spacing * (this.data.length - 1); //available space for bars
     this.barWidth = this.availableWidth / this.data.length; //bar width
@@ -90,12 +91,18 @@ class StackedBarChart {
     line(0, 0, this.chartWidth, 0); //x
   }
 
+  //Draws the ticks
   drawTicks() {
+    //iterates based on the value of numTicks
     for (let i = 0; i <= this.numTicks; i++) {
       fill(199, 206, 211);
       noStroke();
+      //The size will be given in the sketch
       textSize(this.tickSize);
+      //Where the text will be drawn from
       textAlign(RIGHT, CENTER);
+      //Takes the value that was calculated above and multiplies it by i
+      //Then i make sure it has no decimals by using the toFixed command
       text(
         (i * this.tickIncrements).toFixed(this.numDecimals),
         -this.tickMargin,
@@ -104,20 +111,30 @@ class StackedBarChart {
     }
   }
 
+  //Draws the horizontal lines
   drawHorizontalLine() {
-    for (let i = 0; i <= this.numTicks; i++) {
-      stroke(199, 206, 211, 200);
-      strokeWeight(0.5);
-      line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
+    //If this is true draw the horizontal lines
+    //Iterates based on the value of numTicks
+    if (this.showHorizontalLine) {
+      for (let i = 0; i <= this.numTicks; i++) {
+        //give the color slight opacity
+        stroke(199, 206, 211, 200);
+        strokeWeight(0.5);
+        //Same as in draw ticks. Will draw at the same place, but it will be as long as the chart
+        line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
+      }
     }
   }
 
+  //Draws the title
   title() {
+    //If this is true draw the title
     if (this.showTitle) {
       noStroke();
       fill(199, 206, 211);
       textSize(this.titleFontSize);
       textAlign(CENTER, BOTTOM);
+      //TitleMargin to give it more space from the top of the chart
       text(
         this.titleText,
         this.chartWidth / 2,
@@ -126,13 +143,15 @@ class StackedBarChart {
     }
   }
 
+  //Draws the vertical axis title
   verticalAxisTitle() {
     if (this.showVerticalAxisTitle) {
       push();
       noStroke();
       fill(199, 206, 211);
-      textSize(this.titleFontSize);
+      textSize(this.verticalFontSize);
       textAlign(CENTER, BOTTOM);
+      //Rotates text
       rotate((3 * PI) / 2);
       text(
         this.verticalAxisTitleText,
@@ -143,30 +162,12 @@ class StackedBarChart {
     }
   }
 
-  lines() {
-    push();
-    translate(this.margin, 0);
-    for (let i = 0; i < this.data.length; i++) {
-      for (let j = 0; j < this.data[i].total / this.tickBar; j++) {
-        stroke(199, 206, 211, 100);
-        strokeWeight(2);
-        line(
-          0,
-          this.tickBarIncrements * -j,
-          this.barWidth,
-          this.tickBarIncrements * -j
-        );
-      }
-      translate(this.barWidth + this.spacing, 0);
-    }
-    pop();
-  }
-
+  //Draws the horizontal axis title
   horizontalAxisTitle() {
     if (this.showHorizontalAxisTitle) {
       noStroke();
       fill(199, 206, 211);
-      textSize(this.titleFontSize);
+      textSize(this.horizontalFontSize);
       textAlign(CENTER, TOP);
       text(
         this.horizontalAxisTitleText,
@@ -182,18 +183,21 @@ class StackedBarChart {
     for (let i = 0; i < this.data.length; i++) {
       noStroke();
       push();
+      //A nested for loop is required to stack the bar on top of each other
+      //before moving the x position
       for (let j = 0; j < 1; j++) {
         let colorNumb = i % 1;
-
         fill(this.colors[colorNumb]);
-        //fill(0);
+        //The hight of the rect will be calculated in the scale function
         rect(
           (this.barWidth + this.spacing) * i,
           0,
           this.barWidth,
           this.scaleData(-this.data[i].Multi_Development_Housing)
         );
+        //The new origin point is now hight of the previous bar
         translate(0, this.scaleData(-this.data[i].Multi_Development_Housing));
+        //New color for the bar
         fill(this.colors[colorNumb + 1]);
         rect(
           (this.barWidth + this.spacing) * i,
@@ -201,6 +205,7 @@ class StackedBarChart {
           this.barWidth,
           this.scaleData(-this.data[i].One_Off_Housing)
         );
+        //The new origin point is now hight of the previous bar
         translate(0, this.scaleData(-this.data[i].One_Off_Housing));
         fill(this.colors[colorNumb + 2]);
         rect(
@@ -216,36 +221,42 @@ class StackedBarChart {
   }
 
   barValue() {
-    push();
-    translate(this.margin, 0);
-    for (let i = 0; i < this.data.length; i++) {
-      if (this.showValues) {
-        noStroke();
-        push();
-        fill(199, 206, 211);
-        textSize(this.valueFontSize);
-        textAlign(CENTER, CENTER);
-        text(
-          this.data[i].All_Houses,
-          (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].Multi_Development_Housing) / 2
-        );
-        translate(0, this.scaleData(-this.data[i].Multi_Development_Housing));
-        text(
-          this.data[i].Apartments,
-          (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].One_Off_Housing) / 2
-        );
-        translate(0, this.scaleData(-this.data[i].One_Off_Housing));
-        text(
-          this.data[i].Apartments,
-          (this.barWidth + this.spacing) * i + this.barWidth / 2,
-          this.scaleData(-this.data[i].Apartments) / 2
-        );
+    if (this.showValues) {
+      push();
+      translate(this.margin, 0);
+      for (let i = 0; i < this.data.length; i++) {
+        if (this.showValues) {
+          noStroke();
+          push();
+          fill(199, 206, 211);
+          textSize(this.valueFontSize);
+          textAlign(CENTER, CENTER);
+          //To display the bar in the center of the bar 
+          //i take the value that was calculated in the scale function and devide by 2
+          text(
+            this.data[i].All_Houses,
+            (this.barWidth + this.spacing) * i + this.barWidth / 2,
+            this.scaleData(-this.data[i].Multi_Development_Housing) / 2
+          );
+          //New  y position 
+          translate(0, this.scaleData(-this.data[i].Multi_Development_Housing));
+          text(
+            this.data[i].Apartments,
+            (this.barWidth + this.spacing) * i + this.barWidth / 2,
+            this.scaleData(-this.data[i].One_Off_Housing) / 2
+          );
+          //New y position
+          translate(0, this.scaleData(-this.data[i].One_Off_Housing));
+          text(
+            this.data[i].Apartments,
+            (this.barWidth + this.spacing) * i + this.barWidth / 2,
+            this.scaleData(-this.data[i].Apartments) / 2
+          );
+          pop();
+        }
       }
       pop();
     }
-    pop();
   }
 
   legend() {
@@ -253,9 +264,9 @@ class StackedBarChart {
       rectMode(CENTER);
       noStroke();
       fill(199, 206, 211);
-      textSize(this.bodyFontSize);
+      textSize(this.legendFontSize);
       textAlign(LEFT, CENTER);
-      fill('#eb548c');
+      fill(this.colors[2]);
       rect(
         this.chartWidth + this.rectLegendMargin,
         -this.chartHeight / 2 - this.legendSpacing,
@@ -268,7 +279,7 @@ class StackedBarChart {
         this.chartWidth + this.legendMargin,
         -this.chartHeight / 2 - this.legendSpacing
       );
-      fill('#ea7369');
+      fill(this.colors[1]);
       rect(
         this.chartWidth + this.rectLegendMargin,
         -this.chartHeight / 2,
@@ -281,7 +292,7 @@ class StackedBarChart {
         this.chartWidth + this.legendMargin,
         -this.chartHeight / 2
       );
-      fill('#af4bce');
+      fill(this.colors[0]);
       rect(
         this.chartWidth + this.rectLegendMargin,
         -this.chartHeight / 2 + this.legendSpacing,
@@ -331,29 +342,6 @@ class StackedBarChart {
         }
       }
     }
-    pop();
-  }
-
-  //Need to add it to scale
-  drawAvg() {
-    push();
-    translate(this.margin, 0);
-    noFill();
-    strokeWeight(3);
-    stroke(128, 24, 160);
-    beginShape();
-    for (let i = 0; i < this.data.length; i++) {
-      vertex(
-        (this.barWidth + this.spacing) * i + this.barWidth / 2,
-        this.scaleData(-this.data[i].average)
-      );
-      ellipse(
-        (this.barWidth + this.spacing) * i + this.barWidth / 2,
-        this.scaleData(-this.data[i].average),
-        6
-      );
-    }
-    endShape();
     pop();
   }
 }

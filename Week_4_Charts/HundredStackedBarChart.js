@@ -15,11 +15,12 @@ class HundredStackedBarChart {
     this.numTicks;
     this.tickSize;
     this.tickIncrements;
-    this.tickBar;
     this.numDecimals;
     this.bodyFontSize;
     this.titleFontSize;
     this.valueFontSize;
+    this.horizontalFontSize;
+    this.verticalFontSize;
 
     this.rounding;
     this.rectSize;
@@ -47,7 +48,6 @@ class HundredStackedBarChart {
   }
   updateValues() {
     this.tickSpacing = this.chartHeight / this.numTicks; //space between ticks on  the left
-    this.tickBarIncrements = this.chartHeight / this.tickBar;
     this.availableWidth =
       this.chartWidth - this.margin * 2 - this.spacing * (this.data.length - 1); //available space for bars
     this.barWidth = this.availableWidth / this.data.length; //bar width
@@ -70,15 +70,23 @@ class HundredStackedBarChart {
   }
 
   calculateMaxValue() {
+    //Assigning a variable called listValues
+    //creates a new array of all the values withing the data.total_Dwelling
     let listValues = this.data.map(function (x) {
       return x.Total_Dwelling;
     });
+
+    //Finds the hights number
     this.maxValue = max(listValues);
+    //Rounds up the highest number
     this.maxValue = Math.ceil(this.maxValue / this.rounding) * this.rounding;
+    //Calculates the value that will be displayed by the ticks
     this.tickIncrements = this.maxValue / this.numTicks;
   }
 
   //This function expects a parameter and scales it using the max value and chart hight
+  //The scale function now accepts 2 parameters one for the value that will be scales
+  //The other is total value of that object .
   scaleData(num, total) {
     return map(num, 0, total, 0, this.chartHeight);
   }
@@ -90,12 +98,18 @@ class HundredStackedBarChart {
     line(0, 0, this.chartWidth, 0); //x
   }
 
+  //Draws the ticks
   drawTicks() {
+    //iterates based on the value of numTicks
     for (let i = 0; i <= this.numTicks; i++) {
       fill(199, 206, 211);
       noStroke();
+      //The size will be given in the sketch
       textSize(this.tickSize);
+      //Where the text will be drawn from
       textAlign(RIGHT, CENTER);
+      //Takes the value that was calculated above and multiplies it by i
+      //Then i make sure it has no decimals by using the toFixed command
       text(
         (i * this.tickIncrements).toFixed(this.numDecimals),
         -this.tickMargin,
@@ -104,15 +118,23 @@ class HundredStackedBarChart {
     }
   }
 
+  //Draws the horizontal lines
   drawHorizontalLine() {
-    for (let i = 0; i <= this.numTicks; i++) {
-      stroke(199, 206, 211, 200);
-      strokeWeight(0.5);
-      line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
+    //If this is true draw the horizontal lines
+    //Iterates based on the value of numTicks
+    if (this.showHorizontalLine) {
+      for (let i = 0; i <= this.numTicks; i++) {
+        stroke(199, 206, 211, 200);
+        strokeWeight(0.5);
+        //Same as in draw ticks. Will draw at the same place, but it will be as long as the chart
+        line(0, this.tickSpacing * -i, this.chartWidth, this.tickSpacing * -i);
+      }
     }
   }
 
+  //Draws the title
   title() {
+    //If this is true draw the title
     if (this.showTitle) {
       noStroke();
       fill(199, 206, 211);
@@ -126,13 +148,15 @@ class HundredStackedBarChart {
     }
   }
 
+  //Draws the vertical axis title
   verticalAxisTitle() {
     if (this.showVerticalAxisTitle) {
       push();
       noStroke();
       fill(199, 206, 211);
-      textSize(this.titleFontSize);
+      textSize(this.verticalFontSize);
       textAlign(CENTER, BOTTOM);
+      //Rotates text
       rotate((3 * PI) / 2);
       text(
         this.verticalAxisTitleText,
@@ -143,11 +167,12 @@ class HundredStackedBarChart {
     }
   }
 
+  //Draws the horizontal axis title
   horizontalAxisTitle() {
     if (this.showHorizontalAxisTitle) {
       noStroke();
       fill(199, 206, 211);
-      textSize(this.titleFontSize);
+      textSize(this.horizontalFontSize);
       textAlign(CENTER, TOP);
       text(
         this.horizontalAxisTitleText,
@@ -163,6 +188,8 @@ class HundredStackedBarChart {
     for (let i = 0; i < this.data.length; i++) {
       noStroke();
       push();
+      //A nested for loop is required to stack the bar on top of each other
+      //before moving the x position
       for (let j = 0; j < 1; j++) {
         let colorNumb = i % 1;
 
@@ -171,8 +198,10 @@ class HundredStackedBarChart {
           (this.barWidth + this.spacing) * i,
           0,
           this.barWidth,
+          //I send two parameters to the scale function.
           this.scaleData(-this.data[i].All_Houses, this.data[i].Total_Dwelling)
         );
+        //The new origin point is now hight of the previous bar
         translate(
           0,
           this.scaleData(-this.data[i].All_Houses, this.data[i].Total_Dwelling)
@@ -182,6 +211,7 @@ class HundredStackedBarChart {
           (this.barWidth + this.spacing) * i,
           0,
           this.barWidth,
+          //I send to parameters to the scale function.
           this.scaleData(-this.data[i].Apartments, this.data[i].Total_Dwelling)
         );
       }
@@ -191,15 +221,19 @@ class HundredStackedBarChart {
   }
 
   barValue() {
+    //Stores the original origin point
     push();
     translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
       if (this.showValues) {
         noStroke();
+        //Stores the original origin point
         push();
         fill(199, 206, 211);
         textSize(this.valueFontSize);
         textAlign(CENTER, CENTER);
+        //To get the value to display in the center of the bar
+        //i send the the two parameters to the scale function and devied by 2
         text(
           this.data[i].All_Houses,
           (this.barWidth + this.spacing) * i + this.barWidth / 2,
@@ -208,6 +242,7 @@ class HundredStackedBarChart {
             this.data[i].Total_Dwelling
           ) / 2
         );
+        //The new y position for the next text
         translate(
           0,
           this.scaleData(-this.data[i].All_Houses, this.data[i].Total_Dwelling)
@@ -226,27 +261,33 @@ class HundredStackedBarChart {
     pop();
   }
 
+  //This draws the legends
   legend() {
+    //If true draw
     if (this.showLegend) {
       rectMode(CENTER);
       noStroke();
       fill(199, 206, 211);
       textSize(this.bodyFontSize);
       textAlign(LEFT, CENTER);
-      fill('#ea7369');
+      //Takes the color from the colors array
+      fill(this.colors[1]);
+      //Draws the rect at the end of the chart
+      //Draws the rect at the center hight of the canvas
       rect(
         this.chartWidth + this.rectLegendMargin,
         -this.chartHeight / 2,
         this.rectSize,
         this.rectSize
       );
+      //Changes the color of the text to white
       fill(199, 206, 211);
       text(
         this.legendTitle02,
         this.chartWidth + this.legendMargin,
         -this.chartHeight / 2
       );
-      fill('#af4bce');
+      fill(this.colors[0]);
       rect(
         this.chartWidth + this.rectLegendMargin,
         -this.chartHeight / 2 + this.legendSpacing,
@@ -263,6 +304,7 @@ class HundredStackedBarChart {
   }
 
   textLabel() {
+    //Stores the original origin point
     push();
     translate(this.margin, 0);
     for (let i = 0; i < this.data.length; i++) {
@@ -296,29 +338,6 @@ class HundredStackedBarChart {
         }
       }
     }
-    pop();
-  }
-
-  //Need to add it to scale
-  drawAvg() {
-    push();
-    translate(this.margin, 0);
-    noFill();
-    strokeWeight(3);
-    stroke(128, 24, 160);
-    beginShape();
-    for (let i = 0; i < this.data.length; i++) {
-      vertex(
-        (this.barWidth + this.spacing) * i + this.barWidth / 2,
-        this.scaleData(-this.data[i].average)
-      );
-      ellipse(
-        (this.barWidth + this.spacing) * i + this.barWidth / 2,
-        this.scaleData(-this.data[i].average),
-        6
-      );
-    }
-    endShape();
     pop();
   }
 }

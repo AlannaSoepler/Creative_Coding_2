@@ -1,56 +1,31 @@
 class HorizontalBarChart {
-  constructor(
-    _data,
-    _chartWidth,
-    _chartHeight,
-    _posX,
-    _posY,
-    _rounding,
-    _spacing,
-    _margin,
-    _numDecimals,
-    _labelMargin,
-    _barValueMargin,
-    _titleMargin,
-    _tickMargin,
-    _titleText,
-    _numTicks,
-    _tickSize,
-    _tickBar,
-    _numPlaces,
-    _bodyFontSize,
-    _titleFontSize,
-    _valueFontSize,
-    _verticalAxisTitleText,
-    _verticalAxisMargin,
-    _horizontalAxisTitleText,
-    _horizontalAxisMargin
-  ) {
+  constructor(_data, _posX, _posY) {
     this.data = _data;
-    this.chartWidth = _chartWidth;
-    this.chartHeight = _chartHeight;
+    this.chartWidth;
+    this.chartHeight;
     this.pos = createVector(_posX, _posY);
-    this.rounding = _rounding;
+    this.rounding;
     this.maxValue;
-    this.spacing = _spacing;
-    this.margin = _margin;
-    this.labelMargin = _labelMargin;
-    this.barValueMargin = _barValueMargin;
-    this.titleMargin = _titleMargin;
-    this.tickMargin = _tickMargin;
-    this.titleText = _titleText;
-    this.numTicks = _numTicks;
-    this.tickSize = _tickSize;
+    this.spacing;
+    this.margin;
+    this.labelMargin;
+    this.barValueMargin;
+    this.titleMargin;
+    this.tickMargin;
+    this.titleText;
+    this.numTicks;
+    this.tickSize;
     this.tickIncrements;
-    this.tickBar = _tickBar;
-    this.numDecimals = _numDecimals;
-    this.bodyFontSize = _bodyFontSize;
-    this.titleFontSize = _titleFontSize;
-    this.valueFontSize = _valueFontSize;
-    this.verticalAxisTitleText = _verticalAxisTitleText;
-    this.verticalAxisMargin = _verticalAxisMargin;
-    this.horizontalAxisTitleText = _horizontalAxisTitleText;
-    this.horizontalAxisMargin = _horizontalAxisMargin;
+    this.numDecimals;
+    this.bodyFontSize;
+    this.titleFontSize;
+    this.valueFontSize;
+    this.verticalAxisTitleText;
+    this.verticalAxisMargin;
+    this.horizontalAxisTitleText;
+    this.horizontalAxisMargin;
+    this.horizontalFontSize;
+    this.verticalFontSize;
 
     this.showValues = true;
     this.showLabels = true;
@@ -71,7 +46,6 @@ class HorizontalBarChart {
   }
   updateValues() {
     this.tickSpacing = this.chartWidth / this.numTicks; //space between ticks on  the left
-    this.tickBarIncrements = this.chartWidth / this.tickBar;
     this.availableHight =
       this.chartHeight -
       2 * this.margin -
@@ -80,11 +54,17 @@ class HorizontalBarChart {
     this.completeSpacing = this.barHight + this.spacing;
   }
   calculateMaxValue() {
+    //Assigning a variable called listValues
+    //creates a new array of all the values withing the data.total_Dwelling
     let listValues = this.data.map(function (x) {
       return x.Total_Dwelling;
     });
+
+    //Finds the hights number
     this.maxValue = max(listValues);
+    //Rounds up the highest number
     this.maxValue = Math.ceil(this.maxValue / this.rounding) * this.rounding;
+    //Calculates the value that will be displayed by the ticks
     this.tickIncrements = this.maxValue / this.numTicks;
   }
   render() {
@@ -110,18 +90,28 @@ class HorizontalBarChart {
     line(0, 0, 0, -this.chartHeight);
     line(0, 0, this.chartWidth, 0);
   }
+
+  //Draws the vertical lines
   drawVerticalLine() {
     if (this.showVerticalLine) {
       for (let i = 0; i <= this.numTicks; i++) {
+        //give the color slight opacity
         stroke(199, 206, 211, 200);
         strokeWeight(0.5);
+        //Same as in draw ticks. Will draw at the same place, but it will be as long as the chart
         line(this.tickSpacing * i, 0, this.tickSpacing * i, -this.chartHeight);
       }
     }
   }
+
+  //Draws the ticks
   drawTicks() {
+    //Saves the current origin point
     push();
+    //New origin point
+    //Negative in the y position to go up the y axis
     translate(0, -this.margin);
+    //Iterates though the number of ticks
     for (let i = 0; i <= this.numTicks; i++) {
       let drawTick = this.chartWidth / this.numTicks;
       fill(199, 206, 211);
@@ -137,12 +127,15 @@ class HorizontalBarChart {
     pop();
   }
 
+  //Draws the title
   title() {
+    //If this is true draw the title
     if (this.showTitle) {
       noStroke();
       fill(199, 206, 211);
       textSize(this.titleFontSize);
       textAlign(CENTER, BOTTOM);
+      //TitleMargin to give it more space from the top of the chart
       text(
         this.titleText,
         this.chartWidth / 2,
@@ -151,13 +144,15 @@ class HorizontalBarChart {
     }
   }
 
+  //Draws the vertical axis title
   verticalAxisTitle() {
     if (this.showVerticalAxisTitle) {
       push();
       noStroke();
       fill(199, 206, 211);
-      textSize(this.titleFontSize);
-      textAlign(CENTER, RIGHT);
+      textSize(this.verticalFontSize);
+      textAlign(CENTER, BOTTOM);
+      //Rotates text
       rotate((3 * PI) / 2);
       text(
         this.verticalAxisTitleText,
@@ -168,11 +163,12 @@ class HorizontalBarChart {
     }
   }
 
+  //Draws the horizontal axis title
   horizontalAxisTitle() {
     if (this.showHorizontalAxisTitle) {
       noStroke();
       fill(199, 206, 211);
-      textSize(this.titleFontSize);
+      textSize(this.horizontalFontSize);
       textAlign(CENTER, TOP);
       text(
         this.horizontalAxisTitleText,
@@ -184,12 +180,14 @@ class HorizontalBarChart {
 
   drawRects() {
     push();
+    //The origin goes up the y axis
     translate(0, -this.margin);
     for (let i = 0; i < this.data.length; i++) {
       let colorNumb = i % 4;
       fill(this.colors[colorNumb]);
-
       noStroke();
+      //This time it is the y position that need to be changed
+      //It is negative because it is going up the y axis
       rect(
         0,
         -this.completeSpacing * i,
@@ -209,19 +207,18 @@ class HorizontalBarChart {
         fill(199, 206, 211);
         textSize(this.valueFontSize);
         textAlign(LEFT, CENTER);
-        //text(this.data[i].total, 0, 0);
         text(
           this.data[i].Total_Dwelling,
           this.scaleData(this.data[i].Total_Dwelling) + this.barValueMargin,
-          // this.chartWidth,
           -this.completeSpacing * i - this.barHight / 2
         );
       }
     }
     pop();
   }
-  
+
   textLabel() {
+    //Stores the original origin point
     push();
     translate(0, -this.margin);
     for (let i = 0; i < this.data.length; i++) {
