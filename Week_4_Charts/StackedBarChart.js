@@ -71,11 +71,17 @@ class StackedBarChart {
   }
 
   calculateMaxValue() {
+    //Assigning a variable called listValues
+    //creates a new array of all the values withing the data.total_Dwelling
     let listValues = this.data.map(function (x) {
       return x.Total_Dwelling;
     });
+
+    //Finds the hights number
     this.maxValue = max(listValues);
+    //Rounds up the highest number (depends on the value of rounding)
     this.maxValue = Math.ceil(this.maxValue / this.rounding) * this.rounding;
+    //Calculates the value that will be displayed by the ticks
     this.tickIncrements = this.maxValue / this.numTicks;
   }
 
@@ -231,14 +237,14 @@ class StackedBarChart {
           fill(199, 206, 211);
           textSize(this.valueFontSize);
           textAlign(CENTER, CENTER);
-          //To display the bar in the center of the bar 
+          //To display the bar in the center of the bar
           //i take the value that was calculated in the scale function and devide by 2
           text(
             this.data[i].All_Houses,
             (this.barWidth + this.spacing) * i + this.barWidth / 2,
             this.scaleData(-this.data[i].Multi_Development_Housing) / 2
           );
-          //New  y position 
+          //New  y position
           translate(0, this.scaleData(-this.data[i].Multi_Development_Housing));
           text(
             this.data[i].Apartments,

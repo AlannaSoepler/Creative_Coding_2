@@ -78,7 +78,7 @@ class HundredStackedBarChart {
 
     //Finds the hights number
     this.maxValue = max(listValues);
-    //Rounds up the highest number
+    //Rounds up the highest number (depends on the value of rounding)
     this.maxValue = Math.ceil(this.maxValue / this.rounding) * this.rounding;
     //Calculates the value that will be displayed by the ticks
     this.tickIncrements = this.maxValue / this.numTicks;
